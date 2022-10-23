@@ -1099,18 +1099,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 if (questionSeq == 5) {
                     Lv1_Q5(input);
-                    intervalID = setInterval(textFadeOut, 200);
-                    document.getElementById("answer").style.display ='none';
-                    sleep(200)
+                    setTimeout(function() {intervalID = setInterval(textFadeOut, 20)});
+                    sleep(1000)
+                        .then(() => document.getElementById("answer").style.display ='none')
                         .then(() => document.getElementById("ko").innerText = "당신에 대한 기본적인 것은 알겠어요. 그래도 당신을 조금 더 알려주세요.")
                         .then(() => document.getElementById("en").innerText = "Tell me more about you.")
-                        .then(() => intervalID = setInterval(textFadeIN, 200))
+                        .then(() => setTimeout(function() {intervalID = setInterval(textFadeIN, 20)}))
                         .then(() => sleep(4000)
-                            .then(() => intervalID = setInterval(textFadeOut, 200))
-                            .then(() => document.getElementById("answer").style.display = 'block')
-                            .then(() => document.getElementById("ko").innerText = Lv2_Q[randomNums[0]][0])
-                            .then(() => document.getElementById("en").innerText = Lv2_Q[randomNums[0]][1])
-                            .then(() => intervalID = setInterval(textFadeIN, 200))
+                            .then(() => intervalID = setTimeout(function() {setInterval(textFadeOut, 20)}))
+                            .then(() => sleep(1000)
+                                .then(() => document.getElementById("answer").style.display = 'block')
+                                .then(() => document.getElementById("ko").innerText = Lv2_Q[randomNums[0]][0])
+                                .then(() => document.getElementById("en").innerText = Lv2_Q[randomNums[0]][1])
+                                .then(() => setTimeout(function() {intervalID = setInterval(textFadeIN, 20)})
+                                .then(() => sleep(4000))
+                                )
+                            )
                        )
                 }
                 // Lv2 질문은 랜덤 3개 출력
