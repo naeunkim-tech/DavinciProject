@@ -1,0 +1,59 @@
+<html>
+    <head>
+    <title>Chatbot start</title>
+    <meta charset="utf-8">
+    </head>
+    <body>
+        <a href="#" id="start" onclick="location.href='index.html'">Press ENTER if you want to talk with me.</a>
+        <script type="text/javascript">
+            //const start = document.getElementById("start");
+            // ENTER 누르면 'start' link 강제 클릭, 'index.gtml'로 이동
+            document.addEventListener("keydown", function(e) {
+                document.getElementById("start").click();
+            })
+        </script>
+    </body>
+    <style>
+        body { 
+            color: rgb(255, 255, 255); 
+            font-weight: bold; 
+            font-size: 18px; 
+            font-family: "Courier New"; 
+            background: rgb(0, 0, 0); 
+            height: 100vh;
+        }
+        body::after {
+            content: "";
+            background-repeat: repeat-y;
+            opacity: 0.5;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;   
+        }
+        span { 
+            color: rgb(36, 17, 119); 
+        } 
+        ::-webkit-input-placeholder { 
+            color: rgb(0, 0, 0); 
+        }
+        #main { 
+            position: fixed; 
+            top: 40%; 
+            right: 200px; 
+            width: 400px; 
+            border: 0px solid rgb(0, 0, 0); 
+            padding: 40px; 
+        }
+        #main div { 
+            margin: 10px; 
+        } 
+        #input { 
+            border: 0; 
+            padding: 5px; 
+            border: 1px solid rgb(255, 255, 255); 
+        }
+    </style>
+</html>

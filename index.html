@@ -1,0 +1,96 @@
+<html>
+    <head>
+        <title>Chatbot</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <div class="level">level</div>
+        <div id="container"></div>
+        <div class="output">
+            <div id="ko">질문질문질문질문질문질문</div>
+            <div id="en">question</div>
+            <div id="answer"><input id="input" type="text" placeholder="Answer me." autofocus></div>
+        </div>
+        <div class="continue">
+            <a href="#" id="restart" onclick="location.href='start.html'">Press ENTER</a>
+        </div>
+        <script src="main.js" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.3.0/simplex-noise.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
+    </body>
+    <style>
+        audio {
+            display: none;
+        }
+        body {
+            font-weight: bold;
+            font-family: "Courier New";
+            text-align: center;
+            padding: 0;
+            margin: 0;
+            /* body background color 반드시 적용, 화면 모서리의 흰 여백 생성 방지 */
+            background-color: rgb(0, 0, 0);
+        }
+        .level { 
+            position: absolute;
+            width: 100%;
+            top: 5%;
+            background-color: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
+            font-size: 18px; 
+        }
+        #container {
+            /* three.js 출력될 html 요소의 width 및 height 반드시 설정, 미출력 방지 */
+            width: 100%;
+            height: 100vh;
+            backdrop-filter:  brightness(50%);
+            margin: 0;
+        }
+        .output { 
+            position: absolute;
+            width: 100%;
+            bottom: 14%;
+            background-color: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
+        }
+        #ko {
+            margin-bottom: 1%;
+            font-size: 22px;
+        }
+        #en {
+            font-size: 16px;
+            margin-bottom: 3%;
+
+        }
+        #input {
+            height: 50px;
+            width: 300px;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            background-color: rgb(0, 0, 0);
+            border-bottom: 3px solid white;
+            color: rgb(255, 255, 255);
+            font-size: 18px;
+        }
+        /* input 영역 focus 될 경우, 파란색 윤곽선 제거 */
+        #input:focus {
+            outline: none;
+        }
+        /* input 영역 도움말 */
+        ::-webkit-input-placeholder { 
+            color: rgb(255, 255, 255);
+        }
+        .continue {
+            position: absolute;
+            width: 100%;
+            bottom: 5%;
+            background-color: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
+        }
+
+        
+    </style>
+</html>
