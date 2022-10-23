@@ -1106,16 +1106,16 @@ document.addEventListener("DOMContentLoaded", () => {
                         .then(() => document.getElementById("en").innerText = "Tell me more about you.")
                         .then(() => setTimeout(function() {intervalID = setInterval(textFadeIN, 20)}))
                         .then(() => sleep(4000)
-                            .then(() => intervalID = setTimeout(function() {setInterval(textFadeOut, 20)}))
+                            .then(() => setTimeout(function() {intervalID = setInterval(textFadeOut, 20)}))
                             .then(() => sleep(1000)
                                 .then(() => document.getElementById("answer").style.display = 'block')
                                 .then(() => document.getElementById("ko").innerText = Lv2_Q[randomNums[0]][0])
                                 .then(() => document.getElementById("en").innerText = Lv2_Q[randomNums[0]][1])
-                                .then(() => setTimeout(function() {intervalID = setInterval(textFadeIN, 20)})
-                                .then(() => sleep(4000))
+                                .then(() => setTimeout(function() {intervalID = setInterval(textFadeIN, 20)}))
+                                .then(() => sleep(4000)
                                 )
                             )
-                       )
+                        )
                 }
                 // Lv2 질문은 랜덤 3개 출력
                 if (questionSeq == 6) {
