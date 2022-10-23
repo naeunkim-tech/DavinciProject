@@ -36,9 +36,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function sleep(ms) {
         return new Promise((r) => setTimeout(r, ms));
     }
-    var koOpacity = 0;
-    var enOpacity = 0;
-    var intervalID = 0;
+
+    var koOpacity = 0; enOpacity = 0; inputOpacity = 0;
+    var textintervalID = 0; inputintervalID = 0; 
     function textFadeOut(){
 		var ko = document.getElementById("ko");
         var en = document.getElementById("en");
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			//img.style.opacity=opacity;
 		}
 		else{
-			clearInterval(intervalID);
+			clearInterval(textintervalID);
 		}
         if(enOpacity > 0){
 			enOpacity = enOpacity - 0.1;
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			//img.style.opacity=opacity;
 		}
 		else{
-			clearInterval(intervalID);
+			clearInterval(textintervalID);
 		}
 	}
     function textFadeIN(){
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			//img.style.opacity=opacity;
 		}
 		else{
-			clearInterval(intervalID);
+			clearInterval(textintervalID);
 		}
         if(enOpacity < 1){
 			enOpacity = enOpacity + 0.1;
@@ -80,7 +80,29 @@ document.addEventListener("DOMContentLoaded", () => {
 			//img.style.opacity=opacity;
 		}
 		else{
-			clearInterval(intervalID);
+			clearInterval(textintervalID);
+		}
+    }
+    function inputFadeOut(){
+		inputOpacity = Number(window.getComputedStyle(document.getElementById("input")).getPropertyValue("opacity"));
+		if(inputOpacity > 0){
+			inputOpacity = inputOpacity - 0.1;
+			document.getElementById("input").style.opacity = inputOpacity;
+			//img.style.opacity=opacity;
+		}
+		else{
+			clearInterval(inputintervalID);
+		}
+	}
+    function inputFadeIN(){
+		inputOpacity = Number(window.getComputedStyle(document.getElementById("input")).getPropertyValue("opacity"));
+		if(inputOpacity < 1){
+			inputOpacity = inputOpacity + 0.1;
+			document.getElementById("input").style.opacity = inputOpacity;
+			//img.style.opacity=opacity;
+		}
+		else{
+			clearInterval(inputintervalID);
 		}
     }	 
 
@@ -1099,19 +1121,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 if (questionSeq == 5) {
                     Lv1_Q5(input);
-                    setTimeout(function() {intervalID = setInterval(textFadeOut, 20)});
+                    setTimeout(function() {textintervalID = setInterval(textFadeOut, 20); inputintervalID = setInterval(inputFadeOut, 20);});
                     sleep(1000)
                         .then(() => document.getElementById("answer").style.display ='none')
                         .then(() => document.getElementById("ko").innerText = "당신에 대한 기본적인 것은 알겠어요. 그래도 당신을 조금 더 알려주세요.")
                         .then(() => document.getElementById("en").innerText = "Tell me more about you.")
-                        .then(() => setTimeout(function() {intervalID = setInterval(textFadeIN, 20)}))
+                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
                         .then(() => sleep(4000)
-                            .then(() => setTimeout(function() {intervalID = setInterval(textFadeOut, 20)}))
+                            .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
                             .then(() => sleep(1000)
                                 .then(() => document.getElementById("answer").style.display = 'block')
                                 .then(() => document.getElementById("ko").innerText = Lv2_Q[randomNums[0]][0])
                                 .then(() => document.getElementById("en").innerText = Lv2_Q[randomNums[0]][1])
-                                .then(() => setTimeout(function() {intervalID = setInterval(textFadeIN, 20)}))
+                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20); inputintervalID = setInterval(inputFadeIN, 20)}))
                                 .then(() => sleep(4000)
                                 )
                             )
