@@ -1,41 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-    /*
-    const translate = require('@vitalets/google-translate-api');
-        translate.languages['en'] = 'English';
-        async function translator(colorKo) {
-            try {
-                const res = await translate(colorKo, { to: 'en' })
-                //console.log(res.text);
-            }
-            catch (error){
-                console.log(error)
-            }
-            hexcode(res.text);
-        }
-    const got = require('got');
-    const { Configuration, OpenAIApi } = require("openai");
-    const configuration = new Configuration({
-        // apiKey: process.env.OPENAI_API_KEY,
-        apiKey: "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",
-    });
-    const openai = new OpenAIApi(configuration);
-    async function hexcode(colorEn) {
-        const response = await openai.createCompletion({
-            model: "text-davinci-002",
-            prompt: "The CSS code for a color like" + input + "\nbackground-color: #",
-            temperature: 0,
-            max_tokens: 256,
-            top_p: 1,
-            frequency_penalty: 0,
-            presence_penalty: 0,
-            stop: [";"],
-        });
-        return response.choices[0].text;
-    }
-    */
+    
+
     function sleep(ms) {
         return new Promise((r) => setTimeout(r, ms));
     }
+
 
     var koOpacity = 0; enOpacity = 0; inputOpacity = 0;
     var textintervalID = 0; inputintervalID = 0; 
@@ -47,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		if(koOpacity > 0){
 			koOpacity = koOpacity - 0.1;
 			ko.style.opacity = koOpacity;
-			//img.style.opacity=opacity;
 		}
 		else{
 			clearInterval(textintervalID);
@@ -55,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if(enOpacity > 0){
 			enOpacity = enOpacity - 0.1;
 			en.style.opacity = enOpacity;
-			//img.style.opacity=opacity;
 		}
 		else{
 			clearInterval(textintervalID);
@@ -69,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		if(koOpacity < 1){
 			koOpacity = koOpacity + 0.1;
 			ko.style.opacity = koOpacity;
-			//img.style.opacity=opacity;
 		}
 		else{
 			clearInterval(textintervalID);
@@ -77,7 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if(enOpacity < 1){
 			enOpacity = enOpacity + 0.1;
 			en.style.opacity = enOpacity;
-			//img.style.opacity=opacity;
 		}
 		else{
 			clearInterval(textintervalID);
@@ -88,7 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		if(inputOpacity > 0){
 			inputOpacity = inputOpacity - 0.1;
 			document.getElementById("input").style.opacity = inputOpacity;
-			//img.style.opacity=opacity;
 		}
 		else{
 			clearInterval(inputintervalID);
@@ -99,13 +63,14 @@ document.addEventListener("DOMContentLoaded", () => {
 		if(inputOpacity < 1){
 			inputOpacity = inputOpacity + 0.1;
 			document.getElementById("input").style.opacity = inputOpacity;
-			//img.style.opacity=opacity;
 		}
 		else{
 			clearInterval(inputintervalID);
 		}
     }	 
 
+
+    /* 답변 분석 dic, variable */
     var numberDic = {
         0: ['없', '영', 'none', 'nothing', 'don\'t', 'dont', 'not'],
         1: ['한', '하나', 'one'],
@@ -126,23 +91,20 @@ document.addEventListener("DOMContentLoaded", () => {
         1: ['글쎄', '몰', '모르', '아마', 'maybe'],
         2: ['네', '예', '응', '어', '있', 'ㅇ', 'yes']
     }
-    
     // fist classification
     let gender = -1; age = -1; degree = -1; marriage = -1; region = -1;  // Lv1
     let love = -1; hate = -1; weather = -1; important = -1; friend = -1; // Lv2
     let percent = -1; secret = -1; accuracy = -1;   // Lv3
-    
     // second classification : score
     let genderScore = 0; ageScore = 0; degreeScore = 0; regionScore = 0; marriageScore = 0;    // Lv1
     let loveScore = 0; hateScore = 0; weatherScore = 0; importantScore = 0; friendScore = 0;    // Lv2
     let percentScore = 0; secretScore = 0;  // Lv3
     
-    //console.log("chatting started.");
-    
+
+    /* 답변 처리 함수 */    
     // Q1에 대한 input 받아 questionSeq = 1, Lv1_Q1()가 input 처리 시작
     // Lv1_Q1. What gender do you identify as?
     function Lv1_Q1(input) {
-        //console.log(input);
         var genderDic = {
             0: ['여', '여자', '여성', 'female', 'woman', 'girl', 'she', 'her'],
             1: ['남', '남자', '남성', 'male', 'man', 'boy', 'he', 'him'],
@@ -175,7 +137,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Q2에 대한 input 받아 questionSeq = 2, Lv1_Q2()가 input 처리 시작
     // Lv1_Q2. What is your age?
     function Lv1_Q2(input) {
-        //console.log(input);
         var ageDic = {
             0: ['한', '하나', 'one', '두', '둘', 'two', '세', '셋', 'three', '네', '넷', 'four', '다섯', 'five', '여섯', 'six', '일곱', 'seven', '여덟', 'eight', '아홉', 'nine'], // under teens, contains 0-9
             1: ['열', '십', 'ten', 'eleven', 'twelve', 'teen'], // teens, contains 10-19
@@ -225,7 +186,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // input 받아 questionSeq = 3, Lv1_Q3() 시작
     // Lv1_Q3. Where is your home located?
     function Lv1_Q3(input) {
-        //console.log(input);
         var regionDic = {
             0: ['서울', 'seoul'],
             1: ['부산', 'busan', '대구', , 'daegu', '인천', 'incheon', '광주', 'gwangju', '대전', 'daejeon', '울산', 'ulsan', '세종', 'sejong', '광역'],
@@ -259,7 +219,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // input 받아 questionSeq = 4, Lv1_Q4() 시작
     // Lv1_Q4. What is the highest degree or level of education you have completed?
     function Lv1_Q4(input) {
-        //console.log(input);
         var degreeDic = {
             0: ['유치원', 'kindergarten', 'preschool', 'nursery'],
             1: ['초등', '초딩', '초졸', 'elementary', 'primary'],
@@ -309,7 +268,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // input 받아 questionSeq = 5, Lv1_Q5() 시작
     // Lv1_Q5. Are you married?
     function Lv1_Q5(input) {
-        //console.log(input);
         var marriageDic = {
             0: ['네', '예', '응', '어', 'ㅇ', '했', '기혼', '약혼', '있', 'yes', 'engage'],
             1: ['아니', '아뇨', '안', 'ㄴ', '미혼', '없', '혼자', '독신', 'no'],
@@ -680,81 +638,95 @@ document.addEventListener("DOMContentLoaded", () => {
     }
             
     function output() {
-        let Lv1output = ""; Lv2output = ""; Lv3output = "";
-        let outputSentence = "";
+        let Lv1outputKo = ""; Lv2outputKo = ""; Lv3outputKo = "";
+        let Lv1outputEn = ""; Lv2outputEn = ""; Lv3outputEn = "";
+        let outputSentenceKo = "";
+        let outputSentenceEn = "";
         let Lv1sum = genderScore + ageScore + regionScore + degreeScore + marriageScore;
         let Lv2sum = loveScore + hateScore + weatherScore + importantScore + friendScore;
         let Lv3sum = percentScore + secretScore;
         if (Lv1sum < 4) {
-            Lv1output = "맑은 영혼을 가진";
+            Lv1outputKo = "맑은 영혼을 가진";
+            Lv1outputEn = "with a crystal-clear soul";
         } else if (Lv1sum == 4) {
-            Lv1output = "순수한";
+            Lv1outputKo = "순수한";
+            Lv1outputEn = "100% pure";
         } else if (Lv1sum == 4.5) {
             Lv1output = "보편적인";
+            Lv1outputEn = "super-omnipresent";
         } else if (Lv1sum >= 5 && Lv1sum < 6) {
-            Lv1output = "성숙한";
+            Lv1outputKo = "성숙한";
+            Lv1outputEn = "like the full-grown adult";
         } else if (Lv1sum == 6) {
-            Lv1output = "노련미가 엿보이는";
+            Lv1outputKo = "노련미가 엿보이는";
+            Lv1outputEn = "like the veteran about your life experiences";
         } else {
-            Lv1output = "산전수전 다 겪은";
+            Lv1outputKo = "산전수전 다 겪은";
+            Lv1outputEn = "an old stager";
         }
         if (Lv2sum < 1.5) {
-            Lv2output = "다른 사람의 관심을 즐기며 세상을 하나의 무대로 생각하는";
+            Lv2outputKo = "다른 사람의 관심을 즐기며 세상을 하나의 무대로 생각하는";
+            Lv2outputEn = "Enjoying other people's attention and thinking of the world as your stage";
         } else if (Lv2sum >= 1.5 && Lv2sum < 3) {
-            Lv2output = "활기차고 낙관적인 태도로 세상을 대하는";
+            Lv2outputKo = "활기차고 낙관적인 태도로 세상을 대하는";
+            Lv2outputEn = "very optimistic about dealing with the world";
         } else if (Lv2sum >= 3 && Lv2sum < 4.5) {
-            Lv2output = "세계와 감정적으로 깊고 의미있는 관계를 추구하는";
+            Lv2outputKo = "세계와 감정적으로 깊고 의미있는 관계를 추구하는";
+            Lv2outputEn = "looking for a relationship with the world that is emotionally deep and meaningful";
         } else if (Lv2sum >= 4.5 && Lv2sum < 6) {
-            Lv2output = "인생의 즐거움과 깊은 의미를 동시에 추구하는";
+            Lv2outputKo = "인생의 즐거움과 깊은 의미를 동시에 추구하는";
+            Lv2outputEn = "who seeks both joy and deep meaning in life";
         } else if (Lv2sum >= 6 && Lv2sum < 7.5) {
-            Lv2output = "사회를 위해 자신의 몫보다 많은 기여를 하는";
+            Lv2outputKo = "사회를 위해 자신의 몫보다 많은 기여를 하는";
+            Lv2outputEn = "who contributes more than one's fair share to society";
         } else if (Lv2sum >= 7.5 && Lv2sum < 9) {
-            Lv2output = "행복이나 희열이 덧없는 일시적인 것에 불과하다고 믿는";
+            Lv2outputKo = "행복이나 희열이 덧없는 일시적인 것에 불과하다고 믿는";
+            Lv2outputEn = "who believes that happiness is only temporary is called a hedonist";
         } else {
-            Lv2output = "나를 둘러싼 세계를 도리어 고독하게 만드는";
+            Lv2outputKo = "나를 둘러싼 세계를 도리어 고독하게 만드는";
+            Lv2outputEn = "who makes the world around me lonely is like a black cloud";
         }
         if (Lv3sum == 0) {
-            Lv3output = "페퍼민트의 톡 쏘는 향처럼 솔직하고 거침없는";
+            Lv3outputKo = "페퍼민트의 톡 쏘는 향처럼 솔직하고 거침없는";
+            Lv3outputEn = "a straightforward and outspoken person just like the scent of peppermint strong and refreshing.";
         } else if (Lv3sum < 2) {
-            Lv3output = "나 자신에게 그 누구보다 솔직한";
+            Lv3outputKo = "나 자신에게 그 누구보다 솔직한";
+            Lv3outputEn = "honest with myself than anyone else.";
         } else if (Lv3sum >= 2 && Lv3sum < 3) {
-            Lv3output = "눈빛에서 진실함이 묻어나오는";
+            Lv3outputKo = "눈빛에서 진실함이 묻어나오는";
+            Lv3outputEn = "with eyes telling the truth.";
         } else if (Lv3sum >= 3 && Lv3sum < 4) {
-            Lv3output = "내면이 흑과 백으로 섞여서 오묘한 빛을 내는";
+            Lv3outputKo = "내면이 흑과 백으로 섞여서 오묘한 빛을 내는";
+            Lv3outputEn = "creating a mysterious glow with a mixture of black and white.";
         } else if (Lv3sum >= 4 && Lv3sum < 5) {
-            Lv3output = "소중하게 간직한 내면의 비밀이 있는";
+            Lv3outputKo = "소중하게 간직한 내면의 비밀이 있는";
+            Lv3outputEn = "having a secret that you cherish.";
         } else if (Lv3sum >= 5 && Lv3sum < 6) {
-            Lv3output = "비밀스러운 기억으로 속이 꽤나 시끄러운";
+            Lv3outputKo = "비밀스러운 기억으로 속이 꽤나 시끄러운";
+            Lv3outputEn = "with secret memories may make noise due to them.";
         } else {
-            Lv3output = "무섭도록 정교한 고독을 품은";
+            Lv3outputKo = "무섭도록 정교한 고독을 품은";
+            Lv3outputEn = "chillingly lonely.";
         }
-        document.getElementById("ko").innerText = "오늘 우리가 나눈 이야기들로 나는 당신을 완전히 이해했어요.";
-        document.getElementById("en").innerText = "Through the stories we shared today, I completely understand you.";
-        $( document ).ready( function() {
-            $( 'div.' ).fadeIn( 2000, function() {
-              $( this ).css( 'color', 'red' );
-            } );
-          } );
-        outputSentence = "당신은 " + Lv1output + ", " + Lv2output + ", 그리고 " + Lv3output + " 사람이네요.";
-        //console.log(outputSentence)
+        outputSentenceKo = "당신은 " + Lv1outputKo + ", " + Lv2outputKo + ", \n그리고 " + Lv3outputKo + " 사람이네요.";
+        outputSentenceEn = "You are a person who is " + Lv1outputEn + ",\n" + Lv2outputEn + ", \n" + Lv3outputEn;
         // previous variable data initialization: 변수에 저장된 이전 값 초기화
-        document.getElementById("ko").innerText = outputSentence;
-        document.getElementById("en").innerText = "";
         gender = -1; age = -1; region = -1; degree = -1; marriage = -1; love = -1; hate = -1; friend = -1; weather = -1; important = -1;
         genderScore = -1; ageScore = -1; regionScore = -1; degreeScore = -1; marriageScore = -1; loveScore = 0; hateScore = 0; friendScore = 0; weatherScore = 0; importantScore = 0; percentScore = -1; secretScore = -1;
-        return outputSentence;
+        return [outputSentenceKo, outputSentenceEn];
     }
 
-    
+
+    /* audio */
     var noise = new SimplexNoise();
-    var audio = new Audio("test.mp3");
-    //audio.play();
-    //const audio = document.getElementById("audio");
+    //var audio = new Audio("test.mp3");
     //audio.play();
     //audio.autoplay = true;
     //audio.loop = true;
-    audio.volume = 0.2;
+    //audio.volume = 0.2;
 
+
+    /* three.js */
     /*
     function startViz() {
         
@@ -999,7 +971,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
     function max(arr) {
         return arr.reduce(function (a, b) { return Math.max(a, b); })
-*/
+    */
+
     let renderer,
     scene,
     camera,
@@ -1010,7 +983,6 @@ document.addEventListener("DOMContentLoaded", () => {
     timeout_Debounce,
     //cameraSpeed = 0,
     blobScale = 3;
-    
     function init() {
         scene = new THREE.Scene();
 
@@ -1051,7 +1023,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return new THREE.Vector3(dx, dy, dz);
         }
     }
-
     function animate() {
         nucleus.geometry.vertices.forEach(function (v) {
             let time = Date.now();
@@ -1086,6 +1057,8 @@ document.addEventListener("DOMContentLoaded", () => {
         renderer.setSize(container.clientWidth, container.clientHeight);
     }
 
+
+    /* Lv1-3 질문 순서대로 출력 */
     let questionSeq = 0;
     document.getElementById("ko").innerText = "당신은 자신을 어떤 성별로 식별합니까?";
     document.getElementById("en").innerText = "What gender do you identify as?";
@@ -1146,7 +1119,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (randomNums[0] == 2) {Lv2_Q3(input);}
                     if (randomNums[0] == 3) {Lv2_Q4(input);}
                     if (randomNums[0] == 4) {Lv2_Q5(input);}
-                    document.getElementById("answer").style.display ='block';
+                    //document.getElementById("answer").style.display ='block';
                     document.getElementById("ko").innerText = Lv2_Q[randomNums[1]][0];
                     document.getElementById("en").innerText = Lv2_Q[randomNums[1]][1];
                     //intervalID = setInterval(textFadeIN, 200);
@@ -1157,8 +1130,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (randomNums[1] == 2) {Lv2_Q3(input);}
                     if (randomNums[1] == 3) {Lv2_Q4(input);}
                     if (randomNums[1] == 4) {Lv2_Q5(input);}
-                    console.log(Lv2_Q[randomNums[2]]);
-                    console.log(randomNums[2]);
+                    document.getElementById("ko").innerText = Lv2_Q[randomNums[2]][0];
+                    document.getElementById("en").innerText = Lv2_Q[randomNums[2]][1];
                 }
                 if (questionSeq == 8) {
                     if (randomNums[2] == 0) {Lv2_Q1(input);}
@@ -1166,8 +1139,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (randomNums[2] == 2) {Lv2_Q3(input);}
                     if (randomNums[2] == 3) {Lv2_Q4(input);}
                     if (randomNums[2] == 4) {Lv2_Q5(input);}
-                    console.log("알겠습니다. 마지막으로 조금만 더 물어보겠습니다.")
-                    console.log("당신이 생각하는 당신은 어떤 사람인가요?\nWhat kind of person do you think you are?");
+                    setTimeout(function() {textintervalID = setInterval(textFadeOut, 20); inputintervalID = setInterval(inputFadeOut, 20);});
+                    sleep(1000)
+                        .then(() => document.getElementById("answer").style.display ='none')
+                        .then(() => document.getElementById("ko").innerText = "알겠습니다. 마지막으로 조금만 더 물어보겠습니다.")
+                        .then(() => document.getElementById("en").innerText = "level 3")
+                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
+                        .then(() => sleep(4000)
+                            .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
+                            .then(() => sleep(1000)
+                                .then(() => document.getElementById("answer").style.display = 'block')
+                                .then(() => document.getElementById("ko").innerText = "당신이 생각하는 당신은 어떤 사람인가요?")
+                                .then(() => document.getElementById("en").innerText = "What kind of person do you think you are?")
+                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20); inputintervalID = setInterval(inputFadeIN, 20)}))
+                                .then(() => sleep(4000)
+                                )
+                            )
+                        )
                 }
                 // Lv3 질문은 순서대로 출력
                 if (questionSeq == 9) {Lv3_Q1(input);}
@@ -1175,9 +1163,44 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (questionSeq == 11) {Lv3_Q3(input);}
                 if (questionSeq == 12) {
                     Lv3_Q4(input);
-                    console.log("이제 당신의 말하지 않은 내면을 들여다볼게요.\nLet me take a look at your unsaid inner world.");
-                    console.log(output());
-                    console.log("당신의 자아가 내가 말하는 것과 일치하나요?\nDo you agree with what I am saying?");
+                    let [outputKo, outputEn] = output();
+                    setTimeout(function() {textintervalID = setInterval(textFadeOut, 20); inputintervalID = setInterval(inputFadeOut, 20);});
+                    sleep(1000)
+                        .then(() => document.getElementById("answer").style.display ='none')
+                        .then(() => document.getElementById("ko").innerText = "좋아요! 당신의 말하지 않은 내면을 들여다볼게요.")
+                        .then(() => document.getElementById("en").innerText = "Briiliant! Let me see take a look at your unsaid inner world.")
+                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
+                        .then(() => sleep(4000)
+                            .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
+                            .then(() => sleep(1000)
+                                .then(() => document.getElementById("ko").innerText = "오늘 우리가 나눈 이야기들로 나는 당신을 완전히 이해했어요.")
+                                .then(() => document.getElementById("en").innerText = "Through the stories we shared today, I completely understand you.")
+                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
+                                .then(() => sleep(4000)
+                                    .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
+                                    .then(() => sleep(1000)
+                                        .then(() => document.getElementById("ko").style.fontSize = "18px")
+                                        .then(() => document.getElementById("en").style.fontSize = "14px")
+                                        .then(() => document.getElementById("ko").innerText = outputKo)
+                                        .then(() => document.getElementById("en").innerText = outputEn)
+                                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
+                                        .then(() => sleep(4000)
+                                            .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
+                                            .then(() => sleep(1000)
+                                                .then(() => document.getElementById("answer").style.display ='block')
+                                                .then(() => document.getElementById("ko").style.fontSize = "22px")
+                                                .then(() => document.getElementById("en").style.fontSize = "16px")
+                                                .then(() => document.getElementById("ko").innerText = "당신의 자아가 내가 말하는 것과 일치하나요?")
+                                                .then(() => document.getElementById("en").innerText = "Do you agree with what I am saying?")
+                                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20); inputintervalID = setInterval(inputFadeIN, 20)}))
+                                                .then(() => sleep(4000)
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
                 }
                 if (questionSeq == 13) {
                     Lv3_Q5(input);
