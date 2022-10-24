@@ -1163,6 +1163,33 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (questionSeq == 11) {Lv3_Q3(input);}
                 if (questionSeq == 12) {
                     Lv3_Q4(input);
+                    function toTransition(){
+                        document.getElementById("level").style.display ='none';
+                        document.getElementById("container").style.display ='none';
+                        document.getElementById("output").style.display ='none';
+                        document.getElementById("continue").style.display ='none';
+                        document.body.style.backgroundColor = '#0000CD'; 
+
+                        const content = "P̵̻̦̻͆r̴̜̗̈́̊͠e̸͎̦̪͐̀͒s̴̻̍̀͗s̶̨̡̉̈́ ̷̢͗̄̒Ę̶̄̓Ṋ̶͚̙̎̚͝T̴̫͊͋E̶͙̣̔̋̕ͅR̴͍̓̒̃͜ ̸͎̥̲̀͐̋i̶̡̗̓̾f̸̥̠̯̃͂̚ ̸̠̈́͗͘ÿ̸͇́͜ö̴̼̣́ͅṳ̷̪̽ ̸͖͇̭̂ẅ̸͓̗͉́a̴̟̰̮͐͆̉ṋ̶̠̗̍t̸̮̫̦̆̆̽ ̴͚̭͓͐͆t̷̻̳͐o̸̠̙̚ ̶̢͎̓̎͗t̶̩̱͛͑a̷͕̋̕ḷ̷̈͆͝ͅk̵̯͇͂̽͝ ̶̭̚ẘ̶͔̇̌ȋ̶̗͂͘t̴͕̭͈͘͘ḣ̴̝̥̏̕ ̷̪̟͊͝͝m̸͓̥̾̒e̸͕̩̊̎̈.̴̩́";  
+                        const code = document.getElementById("transition");
+                        let i = 0;
+                        function typing(){
+                            if (i < content.length) {
+                                let codeText = content.charAt(i);
+                                code.innerHTML += codeText; 
+                                i++;
+                            }
+                        }
+                        setInterval(typing, 1);
+                    }
+                    function fromTransition() {
+                        document.getElementById("transition").style.display ='none';
+                        document.getElementById("level").style.display ='block';
+                        document.getElementById("container").style.display ='block';
+                        document.getElementById("output").style.display ='block';
+                        document.getElementById("continue").style.display ='block';
+                        document.body.style.backgroundColor = '#000000';
+                    }
                     let [outputKo, outputEn] = output();
                     setTimeout(function() {textintervalID = setInterval(textFadeOut, 20); inputintervalID = setInterval(inputFadeOut, 20);});
                     sleep(1000)
@@ -1171,14 +1198,15 @@ document.addEventListener("DOMContentLoaded", () => {
                         .then(() => document.getElementById("en").innerText = "Briiliant! Let me see take a look at your unsaid inner world.")
                         .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
                         .then(() => sleep(3000)
-                            .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
-                            .then(() => sleep(1000)
+                            .then(() => toTransition())
+                            .then(() => sleep(5000)
+                                .then(() => fromTransition())
                                 .then(() => document.getElementById("ko").innerText = "오늘 우리가 나눈 이야기들로 나는 당신을 완전히 이해했어요.")
                                 .then(() => document.getElementById("en").innerText = "Through the stories we shared today, I completely understand you.")
                                 .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
                                 .then(() => sleep(3000)
                                     .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
-                                    .then(() => sleep(1000)
+                                    .then(() => sleep(5000)
                                         .then(() => document.getElementById("ko").style.fontSize = "18px")
                                         .then(() => document.getElementById("en").style.fontSize = "14px")
                                         .then(() => document.getElementById("ko").innerText = outputKo)
@@ -1200,7 +1228,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                     )
                                 )
                             )
-                        )
+                        )    
                 }
                 if (questionSeq == 13) {
                     Lv3_Q5(input);
