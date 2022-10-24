@@ -1184,11 +1184,22 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                     function fromTransition() {
                         document.getElementById("transition").style.display ='none';
+                        document.getElementById('transitionVideo').style.display = 'none';
                         document.getElementById("level").style.display ='block';
                         document.getElementById("container").style.display ='block';
                         document.getElementById("output").style.display ='block';
                         document.getElementById("continue").style.display ='block';
                         document.body.style.backgroundColor = '#000000';
+                    }
+                    function transitionVideo() {
+                        document.getElementById("transition").style.display ='none';
+                        document.getElementById("level").style.display ='none';
+                        document.getElementById("container").style.display ='none';
+                        document.getElementById("output").style.display ='none';
+                        document.getElementById("continue").style.display ='none';
+                        document.getElementById('transitionVideo').style.display = 'block';
+                        document.getElementById('transitionVideo').style.height = String(window.innerHeight)+"px";
+                        document.getElementById('transitionVideo').play();
                     }
                     let [outputKo, outputEn] = output();
                     setTimeout(function() {textintervalID = setInterval(textFadeOut, 20); inputintervalID = setInterval(inputFadeOut, 20);});
@@ -1200,28 +1211,31 @@ document.addEventListener("DOMContentLoaded", () => {
                         .then(() => sleep(3000)
                             .then(() => toTransition())
                             .then(() => sleep(5000)
-                                .then(() => fromTransition())
-                                .then(() => document.getElementById("ko").innerText = "오늘 우리가 나눈 이야기들로 나는 당신을 완전히 이해했어요.")
-                                .then(() => document.getElementById("en").innerText = "Through the stories we shared today, I completely understand you.")
-                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
-                                .then(() => sleep(3000)
-                                    .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
-                                    .then(() => sleep(5000)
-                                        .then(() => document.getElementById("ko").style.fontSize = "18px")
-                                        .then(() => document.getElementById("en").style.fontSize = "14px")
-                                        .then(() => document.getElementById("ko").innerText = outputKo)
-                                        .then(() => document.getElementById("en").innerText = outputEn)
-                                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
-                                        .then(() => sleep(10000)
-                                            .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
-                                            .then(() => sleep(1000)
-                                                .then(() => document.getElementById("answer").style.display ='block')
-                                                .then(() => document.getElementById("ko").style.fontSize = "22px")
-                                                .then(() => document.getElementById("en").style.fontSize = "16px")
-                                                .then(() => document.getElementById("ko").innerText = "당신의 자아가 내가 말하는 것과 일치하나요?")
-                                                .then(() => document.getElementById("en").innerText = "Do you agree with what I am saying?")
-                                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20); inputintervalID = setInterval(inputFadeIN, 20)}))
-                                                .then(() => sleep(3000)
+                                .then(() => transitionVideo())
+                                .then(() => sleep(5000)
+                                    .then(() => fromTransition())
+                                    .then(() => document.getElementById("ko").innerText = "오늘 우리가 나눈 이야기들로 나는 당신을 완전히 이해했어요.")
+                                    .then(() => document.getElementById("en").innerText = "Through the stories we shared today, I completely understand you.")
+                                    .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
+                                    .then(() => sleep(3000)
+                                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
+                                        .then(() => sleep(5000)
+                                            .then(() => document.getElementById("ko").style.fontSize = "18px")
+                                            .then(() => document.getElementById("en").style.fontSize = "14px")
+                                            .then(() => document.getElementById("ko").innerText = outputKo)
+                                            .then(() => document.getElementById("en").innerText = outputEn)
+                                            .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
+                                            .then(() => sleep(10000)
+                                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
+                                                .then(() => sleep(1000)
+                                                    .then(() => document.getElementById("answer").style.display ='block')
+                                                    .then(() => document.getElementById("ko").style.fontSize = "22px")
+                                                    .then(() => document.getElementById("en").style.fontSize = "16px")
+                                                    .then(() => document.getElementById("ko").innerText = "당신의 자아가 내가 말하는 것과 일치하나요?")
+                                                    .then(() => document.getElementById("en").innerText = "Do you agree with what I am saying?")
+                                                    .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20); inputintervalID = setInterval(inputFadeIN, 20)}))
+                                                    .then(() => sleep(3000)
+                                                    )
                                                 )
                                             )
                                         )
