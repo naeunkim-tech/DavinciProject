@@ -29,7 +29,6 @@
     </body>
     <script type="text/javascript">
         /* input 값 개수가 0이거나 제한 초과 시  button disabled */
-        //document.getElementById("continueButton").disabled = true;
         function abledButton() {
             let textByte = 0;
             let inputText = document.getElementById("input").value;
@@ -101,7 +100,7 @@
             text-align: center;
         }
         #ko {
-            margin-bottom: 1%;
+            margin-bottom: 0.5%;
             font-size: 22px;
             line-height: 120%;
         }
@@ -128,7 +127,7 @@
         }
         /* input 영역 도움말 */
         ::-webkit-input-placeholder { 
-            color: rgb(255, 255, 255);
+            color: rgba(255, 255, 255, 0.315);
         }
         #continue {
             width: 100%;
@@ -144,12 +143,12 @@
             border: 1px solid rgb(223, 223, 223);
             padding: 3px;
             width: 180px;
-            line-height: 8px;
+            line-height: 5px;
         }
         #continueButton:disabled  {
             background-color: rgb(0, 0, 0);
-            color: rgb(255, 255, 255);
-            border: 1px solid white;
+            color: rgba(255, 255, 255, 0.676);
+            border: 1px solid rgb(255, 255, 255, 0.676);
         }
         #ButtonKo {
             font-size: 14px;
