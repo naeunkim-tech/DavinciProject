@@ -5,21 +5,35 @@
     </head>
     <body>
         <div id="start">
-            <button id="startButton" disabled>
+            <button id="startButton">
                 <p id="buttonKo">당신의 자아에 대한 설명을 시작하려면 엔터키를 누르십시오.</p>
                 <p id="buttonEn">Press ENTER to start explaining your self.</p>
             </button>
         </div>
-        <script type="text/javascript">
-            //const start = document.getElementById("start");
-            // ENTER 누르면 'start' link 강제 클릭, 'index.gtml'로 이동
-            document.addEventListener("keydown", function(e) {
-                document.getElementById("start").click();
-            })
-        </script>
+        <video src="test.mp4" id="startVideo"></video>
     </body>
+    <script type="text/javascript">
+        function sleep(ms) {
+            return new Promise((r) => setTimeout(r, ms));
+        }
+        //const start = document.getElementById("start");
+        // ENTER 누르면 'start' link 강제 클릭, 'index.gtml'로 이동
+        document.addEventListener("keydown", function(e) {
+            if (e.keyCode == 13) {
+                document.getElementById("startButton").click();
+                sleep(5000).then(() => startVideo());
+            }
+        })
+        function startVideo() {
+            document.getElementById("startButton").style.display = 'none';
+            document.getElementById('startVideo').style.display = 'block';
+            document.getElementById('startVideo').style.height = String(window.innerHeight)+"px";
+            document.getElementById('startVideo').play();
+            sleep(5000).then(() => window.location.href="main.html");
+        }
+    </script>
     <style>
-        body { 
+        body {
             background-color: rgb(0, 0, 0);
             font-size: 18px; 
             font-family: "Courier New";
@@ -33,23 +47,31 @@
             display: flex; 
         }
         #startButton { 
-            background-color: rgb(223, 223, 223);
-            color: rgb(0, 0, 0);
-            border: 1px solid rgb(223, 223, 223);
-            padding: 1%;
-            width: 35%;
-            line-height: 12px;
-        }
-        #startButton:disabled { 
             background-color: rgb(0, 0, 0);
             color: rgba(255, 255, 255, 0.676);
             border: 1px solid rgb(255, 255, 255, 0.676);
+            padding: 1%;
+            width: 35%;
+            line-height: 12px;
+            transition: all 0.1s ease;
+            animation: blink 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes blink {
+            0% {opacity: 0.1;}
+            100% {opacity: 1;}
+        }
+        #startButton:active {
+            background-color: rgb(255, 255, 255);
+            transition: all 0.1s ease;
         }
         #ButtonKo {
             font-size: 22px;
         }
         #ButtonEn {
             font-size: 18px;
+        }
+        #startVideo {
+            display: none;
         }
     </style>
 </html>
