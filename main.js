@@ -1219,13 +1219,13 @@ document.addEventListener("DOMContentLoaded", () => {
                                     .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
                                     .then(() => sleep(3000)
                                         .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
-                                        .then(() => sleep(5000)
+                                        .then(() => sleep(1000)
                                             .then(() => document.getElementById("ko").style.fontSize = "18px")
                                             .then(() => document.getElementById("en").style.fontSize = "14px")
                                             .then(() => document.getElementById("ko").innerText = outputKo)
                                             .then(() => document.getElementById("en").innerText = outputEn)
                                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
-                                            .then(() => sleep(10000)
+                                            .then(() => sleep(15000)
                                                 .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
                                                 .then(() => sleep(1000)
                                                     .then(() => document.getElementById("answer").style.display ='block')
@@ -1248,7 +1248,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     Lv3_Q5(input);
                     accuracy = -1;
                     // ENTER 누르면 'start' link 강제 클릭, 'index.gtml'로 이동
-                    document.getElementById("restart").click();
+                    window.location.href="start.html";
                 }
             }
         }       
