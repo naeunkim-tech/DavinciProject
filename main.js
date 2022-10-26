@@ -528,9 +528,18 @@ document.addEventListener("DOMContentLoaded", () => {
     // Lv3_Q1. 당신이 생각하는 당신은 어떤 사람인가요?
     function Lv3_Q1(input) {
         lv3q1_input = input;
-        document.getElementById("ko").innerText = "당신의 내면은 어떤 색깔인지 설명해줄래요?";  // questionSeq = 9
-        document.getElementById("en").innerText = "Could you explain what color you have on the inside?";
-        return lv3q1_input;
+        return $.ajax({
+            type:'POST',
+            url: '/data',
+            accept: "application/json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ data: input }),
+        }).done(function(data){
+            document.getElementById("ko").innerText = "당신의 내면은 어떤 색깔인지 설명해줄래요?";  // questionSeq = 9
+            document.getElementById("en").innerText = "Could you explain what color you have on the inside?";
+    
+            return lv3q1_input;
+        });
     }
     // input 받아 questionSeq = 10, Lv3_Q2() 시작
     // Lv3_Q2. 당신의 내면은 어떤 색깔인지 설명해줄래요?
@@ -545,8 +554,15 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(data.toString());
         });
         */
-        document.getElementById("ko").innerText = "내가 당신을 몇 퍼센트 이해할 수 있다고 생각하나요?";  // questionSeq = 9
-        document.getElementById("en").innerText = "How much do you think I can understand you?";
+        $.ajax({
+            type:'GET',
+            url: '/run?input=' + input,
+        }).done(function(data){
+            alert(data);
+
+            document.getElementById("ko").innerText = "내가 당신을 몇 퍼센트 이해할 수 있다고 생각하나요?";  // questionSeq = 9
+            document.getElementById("en").innerText = "How much do you think I can understand you?";
+        });
     }
     // input 받아 questionSeq = 11, Lv3_Q3() 시작
     // Lv3_Q3. 내가 당신을 몇 퍼센트 이해할 수 있다고 생각하나요?
@@ -835,9 +851,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ball.rotation.y += 0.005;
             ball.rotation.z += 0.002;
     
-    
             WarpBall(ball, modulate(Math.pow(lowerMaxFr, 0.8), 0, 1, 0, 8), modulate(upperAvgFr, 0, 1, 0, 4));
-    
     
             requestAnimationFrame(render);
             renderer.render(scene, camera);
