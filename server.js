@@ -1,4 +1,3 @@
-
 /* http://127.0.0.1:3000 */
 
 const express = require('express');
@@ -11,7 +10,7 @@ app.use(express.json());
 app.use('/', express.static('./'));
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/start.html');
 });
 
 app.get('/run', (req, res) => {
@@ -24,7 +23,7 @@ app.get('/run', (req, res) => {
     };
 
 
-    return PythonShell.run('AIfunction.py', options, function (err, result) {
+    return PythonShell.run('aifunction.py', options, function (err, result) {
         if (err) throw err;
         res.send(result);
     });
