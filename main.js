@@ -632,7 +632,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             percentScore = 0;
         }
-        document.getElementById("ko").innerText = "당신이 평생 누구에게도 말하지 않은 비밀이 있나요?";  // questionSeq = 11
+        document.getElementById("ko").innerText = "당신이 평생 누구에게도 말하지 않은 비밀이 있습니까?";  // questionSeq = 11
         document.getElementById("en").innerText = "Is there a secret from your life that you've never told anyone?";
         return percentScore;
     }
@@ -1121,11 +1121,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (questionSeq == 4) {Lv1_Q4(input);}
             if (questionSeq >= 5) {
                 var Lv2_Q = {
-                    0: ["당신이 이 세상에서 사랑한다고 말할 수 있는 것은 몇 개나 되나요?", "How many things can you say you love in this world?"],
-                    1: ["당신이 이 세상에서 증오한다고 말할 수 있는 것은 몇 개나 되나요?", "How many things can you say you hate in this world?"],
-                    2: ["당신은 어떤 날씨를 좋아하나요?", "What is your favorite season?"],
-                    3: ["인생에서 가장 중요하게 생각하는 것은 무엇인가요?", "What is the most important value in your life?"],
-                    4: ["당신의 진정한 친구는 몇 명인가요?", "How many people can you rely on?"]
+                    0: ["당신이 이 세상에서 사랑한다고 말할 수 있는 것은 몇 개나 됩니까?", "How many things can you say you love in this world?"],
+                    1: ["당신이 이 세상에서 증오한다고 말할 수 있는 것은 몇 개나 됩니까?", "How many things can you say you hate in this world?"],
+                    2: ["당신은 어떤 계절을 좋아합니까?", "What is your favorite season?"],
+                    3: ["인생에서 가장 중요하게 생각하는 것은 무엇입니까?", "What is the most important value in your life?"],
+                    4: ["당신의 진정한 친구는 몇 명입니까?", "How many people can you rely on?"]
                 }
                 if (questionSeq == 5) {
                     Lv1_Q5(input);
@@ -1184,7 +1184,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
                             .then(() => sleep(1000)
                                 .then(() => document.getElementById("answer").style.display = 'block')
-                                .then(() => document.getElementById("ko").innerText = "당신이 생각하는 당신은 어떤 사람인가요?")
+                                .then(() => document.getElementById("ko").innerText = "당신이 생각하는 당신은 어떤 사람입니까?")
                                 .then(() => document.getElementById("en").innerText = "What kind of person do you think you are?")
                                 .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20); inputintervalID = setInterval(inputFadeIN, 20)}))
                                 .then(() => sleep(3000)
