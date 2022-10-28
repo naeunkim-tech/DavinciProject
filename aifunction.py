@@ -2,7 +2,7 @@ import openai
 import googletrans
 import json
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 def hexcode(input):
     response = openai.Completion.create(
