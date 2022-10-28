@@ -573,7 +573,7 @@ document.addEventListener("DOMContentLoaded", () => {
             type:'GET',
             url: '/run?input=' + input,
         }).done(function(data){
-            alert(data);
+            console.log(data);
 
             document.getElementById("ko").innerText = "내가 당신을 몇 퍼센트 이해할 수 있다고 생각하나요?";  // questionSeq = 9
             document.getElementById("en").innerText = "How much do you think I can understand you?";
@@ -1129,19 +1129,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 if (questionSeq == 5) {
                     Lv1_Q5(input);
-                    setTimeout(function() {textintervalID = setInterval(textFadeOut, 20); inputintervalID = setInterval(inputFadeOut, 20);});
-                    sleep(1000)
+                    setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
+                    sleep(2000)
                         .then(() => document.getElementById("answer").style.display ='none')
                         .then(() => document.getElementById("ko").innerText = "당신에 대한 기본적인 것은 알겠어요. 그래도 당신을 조금 더 알려주세요.")
                         .then(() => document.getElementById("en").innerText = "Tell me more about you.")
-                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
+                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
                         .then(() => sleep(3000)
-                            .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
-                            .then(() => sleep(1000)
+                            .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
+                            .then(() => sleep(2000)
                                 .then(() => document.getElementById("answer").style.display = 'block')
                                 .then(() => document.getElementById("ko").innerText = Lv2_Q[randomNums[0]][0])
                                 .then(() => document.getElementById("en").innerText = Lv2_Q[randomNums[0]][1])
-                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20); inputintervalID = setInterval(inputFadeIN, 20)}))
+                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 200); inputintervalID = setInterval(inputFadeIN, 200)}))
                                 .then(() => sleep(3000)
                                 )
                             )
@@ -1174,19 +1174,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (randomNums[2] == 2) {Lv2_Q3(input);}
                     if (randomNums[2] == 3) {Lv2_Q4(input);}
                     if (randomNums[2] == 4) {Lv2_Q5(input);}
-                    setTimeout(function() {textintervalID = setInterval(textFadeOut, 20); inputintervalID = setInterval(inputFadeOut, 20);});
-                    sleep(1000)
+                    setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
+                    sleep(2000)
                         .then(() => document.getElementById("answer").style.display ='none')
                         .then(() => document.getElementById("ko").innerText = "알겠습니다. 마지막으로 조금만 더 물어보겠습니다.")
                         .then(() => document.getElementById("en").innerText = "level 3")
-                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
+                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
                         .then(() => sleep(3000)
-                            .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
-                            .then(() => sleep(1000)
+                            .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
+                            .then(() => sleep(2000)
                                 .then(() => document.getElementById("answer").style.display = 'block')
                                 .then(() => document.getElementById("ko").innerText = "당신이 생각하는 당신은 어떤 사람입니까?")
                                 .then(() => document.getElementById("en").innerText = "What kind of person do you think you are?")
-                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20); inputintervalID = setInterval(inputFadeIN, 20)}))
+                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100); inputintervalID = setInterval(inputFadeIN, 100)}))
                                 .then(() => sleep(3000)
                                 )
                             )
@@ -1237,12 +1237,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         document.getElementById('transitionVideo').play();
                     }
                     let [outputKo, outputEn] = output();
-                    setTimeout(function() {textintervalID = setInterval(textFadeOut, 20); inputintervalID = setInterval(inputFadeOut, 20);});
+                    setTimeout(function() {textintervalID = setInterval(textFadeOut, 200); inputintervalID = setInterval(inputFadeOut, 200);});
                     sleep(1000)
                         .then(() => document.getElementById("answer").style.display ='none')
                         .then(() => document.getElementById("ko").innerText = "좋아요! 당신의 말하지 않은 내면을 들여다볼게요.")
                         .then(() => document.getElementById("en").innerText = "Briiliant! Let me see take a look at your unsaid inner world.")
-                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
+                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
                         .then(() => sleep(3000)
                             .then(() => toTransition())
                             .then(() => sleep(5000)
@@ -1251,24 +1251,24 @@ document.addEventListener("DOMContentLoaded", () => {
                                     .then(() => fromTransition())
                                     .then(() => document.getElementById("ko").innerText = "오늘 우리가 나눈 이야기들로 나는 당신을 완전히 이해했어요.")
                                     .then(() => document.getElementById("en").innerText = "Through the stories we shared today, I completely understand you.")
-                                    .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
+                                    .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
                                     .then(() => sleep(3000)
-                                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
-                                        .then(() => sleep(1000)
+                                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
+                                        .then(() => sleep(2000)
                                             .then(() => document.getElementById("ko").style.fontSize = "18px")
                                             .then(() => document.getElementById("en").style.fontSize = "14px")
                                             .then(() => document.getElementById("ko").innerText = outputKo)
                                             .then(() => document.getElementById("en").innerText = outputEn)
-                                            .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20)}))
+                                            .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
                                             .then(() => sleep(15000)
-                                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 20)}))
-                                                .then(() => sleep(1000)
+                                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
+                                                .then(() => sleep(2000)
                                                     .then(() => document.getElementById("answer").style.display ='block')
                                                     .then(() => document.getElementById("ko").style.fontSize = "22px")
                                                     .then(() => document.getElementById("en").style.fontSize = "16px")
                                                     .then(() => document.getElementById("ko").innerText = "당신의 자아가 내가 말하는 것과 일치하나요?")
                                                     .then(() => document.getElementById("en").innerText = "Do you agree with what I am saying?")
-                                                    .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 20); inputintervalID = setInterval(inputFadeIN, 20)}))
+                                                    .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100); inputintervalID = setInterval(inputFadeIN, 100)}))
                                                     .then(() => sleep(3000)
                                                     )
                                                 )
