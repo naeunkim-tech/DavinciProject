@@ -105,6 +105,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Q1에 대한 input 받아 questionSeq = 1, Lv1_Q1()가 input 처리 시작
     // Lv1_Q1. What gender do you identify as?
     function Lv1_Q1(input) {
+        // progress bar
+        fnStep1();
         var genderDic = {
             0: ['여', '여자', '여성', 'female', 'woman', 'girl', 'she', 'her'],
             1: ['남', '남자', '남성', 'male', 'man', 'boy', 'he', 'him'],
@@ -137,6 +139,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Q2에 대한 input 받아 questionSeq = 2, Lv1_Q2()가 input 처리 시작
     // Lv1_Q2. What is your age?
     function Lv1_Q2(input) {
+        // progress bar
+        fnStep1();
         var ageDic = {
             0: ['한', '하나', 'one', '두', '둘', 'two', '세', '셋', 'three', '네', '넷', 'four', '다섯', 'five', '여섯', 'six', '일곱', 'seven', '여덟', 'eight', '아홉', 'nine'], // under teens, contains 0-9
             1: ['열', '십', 'ten', 'eleven', 'twelve', 'teen'], // teens, contains 10-19
@@ -186,6 +190,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // input 받아 questionSeq = 3, Lv1_Q3() 시작
     // Lv1_Q3. Where is your home located?
     function Lv1_Q3(input) {
+        // progress bar
+        fnStep1();
         var regionDic = {
             0: ['서울', 'seoul'],
             1: ['부산', 'busan', '대구', , 'daegu', '인천', 'incheon', '광주', 'gwangju', '대전', 'daejeon', '울산', 'ulsan', '세종', 'sejong', '광역'],
@@ -219,6 +225,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // input 받아 questionSeq = 4, Lv1_Q4() 시작
     // Lv1_Q4. What is the highest degree or level of education you have completed?
     function Lv1_Q4(input) {
+        // progress bar
+        fnStep1();
         var degreeDic = {
             0: ['유치원', 'kindergarten', 'preschool', 'nursery'],
             1: ['초등', '초딩', '초졸', 'elementary', 'primary'],
@@ -268,6 +276,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // input 받아 questionSeq = 5, Lv1_Q5() 시작
     // Lv1_Q5. Are you married?
     function Lv1_Q5(input) {
+        // progress bar
+        fnStep1();
         var marriageDic = {
             0: ['네', '예', '응', '어', 'ㅇ', '했', '기혼', '약혼', '있', 'yes', 'engage'],
             1: ['아니', '아뇨', '안', 'ㄴ', '미혼', '없', '혼자', '독신', 'no'],
@@ -296,6 +306,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // input 받아 questionSeq = 6~8, Lv2_Q1() 시작
     // Lv2_Q1. 당신이 이 세상에서 사랑한다고 말할 수 있는 것은 몇 개나 되나요?
     function Lv2_Q1(input) {
+        // progress bar
+        fnStep2();
         // if (typeof output) -> string
         if (isNaN(parseInt(input))) {
             // 십의 자리만 판별, 따라서 90부터 10까지 내림차순 확인
@@ -356,6 +368,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // input 받아 questionSeq = 6~8, Lv2_Q2() 시작
     // Lv2_Q2. 당신이 이 세상에서 증오한다고 말할 수 있는 것은 몇 개나 되나요?
     function Lv2_Q2(input) {
+        // progress bar
+        fnStep2();
         // if (typeof output) -> string
         if (isNaN(parseInt(input))) {
             // 십의 자리만 판별, 따라서 90부터 10까지 내림차순 확인
@@ -416,6 +430,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // input 받아 questionSeq = 6~8, Lv2_Q3() 시작
     // Lv2_Q3. 당신은 어떤 계절을 좋아하나요?
     function Lv2_Q3(input) {
+        // progress bar
+        fnStep2();
         var weatherDic = {
             0: ['다', '모든', 'all', 'every'], // contains case of 'prefer not to say'
             1: ['봄', 'spring'],
@@ -451,6 +467,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // input 받아 questionSeq = 6~8, Lv2_Q4() 시작
     // Lv2_Q4. 인생에서 가장 중요하게 생각하는 것은 무엇인가요?
     function Lv2_Q4(input) {
+        // progress bar
+        fnStep2();
         var importantDic = {
             0: ['가족', '친구', '사람', 'family', 'friend', 'human'],
             1: ['사랑', 'love', '우정', 'friendship', '행복', 'happy', 'happiness', '여유', 'relax', '평온', 'peace', '열정', 'passion'],
@@ -482,6 +500,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // input 받아 questionSeq = 6~8, Lv2_Q5() 시작
     // Lv2_Q5. 당신의 진정한 친구는 몇 명인가요?
     function Lv2_Q5(input) {
+        // progress bar
+        fnStep2();
         // if (typeof output) -> string
         if (isNaN(parseInt(input))) {
             // 십의 자리만 판별, 따라서 90부터 10까지 내림차순 확인
@@ -527,6 +547,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // input 받아 questionSeq = 9, Lv3_Q1() 시작
     // Lv3_Q1. 당신이 생각하는 당신은 어떤 사람인가요?
     function Lv3_Q1(input) {
+        // progress bar
+        fnStep3();
+        // node.js 통해 python 함수 호출, 인자 발신
         lv3q1_input = input;
         return $.ajax({
             type:'POST',
@@ -537,23 +560,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }).done(function(data){
             document.getElementById("ko").innerText = "당신의 내면은 어떤 색깔인지 설명해줄래요?";  // questionSeq = 9
             document.getElementById("en").innerText = "Could you explain what color you have on the inside?";
-    
             return lv3q1_input;
         });
     }
     // input 받아 questionSeq = 10, Lv3_Q2() 시작
     // Lv3_Q2. 당신의 내면은 어떤 색깔인지 설명해줄래요?
     function Lv3_Q2(input) {
-        /*
-        const spawn = require('child_process').spawn;
-        const result = spawn('python', ['aifunction.py', input]);
-        result.stdout.on('data', function(data) {
-            console.log(data.toString());
-        });
-        result.stderr.on('data', function(data) {
-            console.log(data.toString());
-        });
-        */
+        // progress bar
+        fnStep3();
+        // node.js 통해 python 함수 호출, return 값 수신
         $.ajax({
             type:'GET',
             url: '/run?input=' + input,
@@ -567,6 +582,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // input 받아 questionSeq = 11, Lv3_Q3() 시작
     // Lv3_Q3. 내가 당신을 몇 퍼센트 이해할 수 있다고 생각하나요?
     function Lv3_Q3(input) {
+        // progress bar
+        fnStep3();
         var percentDic = {
             0: ['영', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'],
             1: ['십', 'ten', 'eleven', 'twelve', 'teen'],
@@ -622,6 +639,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // input 받아 questionSeq = 12, Lv3_Q4() 시작
     // Lv3_Q4. 당신이 평생 누구에게도 말하지 않은 비밀이 있나요?
     function Lv3_Q4(input) {
+        // progress bar
+        fnStep3();
         for (let i = 0; i < Object.keys(yesOrNoDic).length; i++) {
             for (let j = 0; j < yesOrNoDic[i].length; j++) {
                 if ((input.toLowerCase()).indexOf(yesOrNoDic[i][j]) !== -1) {
@@ -643,6 +662,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return secretScore;
     }
     function Lv3_Q5(input) {
+        // progress bar
+        fnStep3();
         for (let i = 0; i < Object.keys(yesOrNoDic).length; i++) {
             for (let j = 0; j < yesOrNoDic[i].length; j++) {
                 if ((input.toLowerCase()).indexOf(yesOrNoDic[i][j]) !== -1) {
@@ -1268,3 +1289,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }       
     });
 });
+
+/* progress bar */
+// progress start
+const circle1 = document.getElementById("step-1");
+const circle2 = document.getElementById("step-2");
+const circle3 = document.getElementById("step-3");
+let step1procress = new CircleProgress(circle1);
+const step2procress = new CircleProgress(circle2);
+const step3procress = new CircleProgress(circle3);
+step1procress.max = 100;
+step1procress.value = 0;
+step2procress.max = 100;
+step2procress.value = 0;
+step3procress.max = 100;
+step3procress.value = 0;
+// progress end
+function fnStep1() {
+  step1procress.value += 20;
+}
+function fnStep2() {
+  step2procress.value += 34;
+}
+function fnStep3() {
+  step3procress.value += 25;
+}
