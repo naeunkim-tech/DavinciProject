@@ -2,12 +2,16 @@ import openai
 import googletrans
 import json
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 def hexcode(input):
+    # translate input
+    translator = googletrans.Translator()
+    result = translator.translate(input, dest="en")
+    # use openai
     response = openai.Completion.create(
     model="text-davinci-002",
-    prompt="The CSS code for a color like" + input + "\n\nbackground-color: #",
+    prompt="The CSS code for a color like " + result.text + "\nbackground-color: #",
     temperature=0,
     max_tokens=64,
     top_p=1.0,
@@ -17,11 +21,9 @@ def hexcode(input):
     )
     return response.choices[0].text
 
+"""
 def translate(input):
     translator = googletrans.Translator()
     result = translator.translate(input, dest="en")
-    hexcode(result.text)
-
-data = {
-    "hexcode" : translate
-}
+    return result.text
+"""
