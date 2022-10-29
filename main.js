@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-
-    var personInfo = new Object();
     
 
     /* delay */
@@ -110,8 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv1_Q1(input) {
         // progress bar
         fnStep1();
-        // json
-        personInfo.gender = input;
         // data processing
         var genderDic = {
             0: ['여', '여자', '여성', 'female', 'woman', 'girl', 'she', 'her'],
@@ -147,8 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv1_Q2(input) {
         // progress bar
         fnStep1();
-        // json
-        personInfo.age = input;
         // data processing
         var ageDic = {
             0: ['한', '하나', 'one', '두', '둘', 'two', '세', '셋', 'three', '네', '넷', 'four', '다섯', 'five', '여섯', 'six', '일곱', 'seven', '여덟', 'eight', '아홉', 'nine'], // under teens, contains 0-9
@@ -201,8 +195,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv1_Q3(input) {
         // progress bar
         fnStep1();
-        // json
-        personInfo.region = input;
         // data processing
         var regionDic = {
             0: ['서울', 'seoul'],
@@ -239,8 +231,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv1_Q4(input) {
         // progress bar
         fnStep1();
-        // json
-        personInfo.degree = input;
         // data processing
         var degreeDic = {
             0: ['유치원', 'kindergarten', 'preschool', 'nursery'],
@@ -293,8 +283,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv1_Q5(input) {
         // progress bar
         fnStep1();
-        // json
-        personInfo.marriage = input;
         // data processing
         var marriageDic = {
             0: ['네', '예', '응', '어', 'ㅇ', '했', '기혼', '약혼', '있', 'yes', 'engage'],
@@ -326,8 +314,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv2_Q1(input) {
         // progress bar
         fnStep2();
-        // json
-        personInfo.love = input;
         // data processing
         // if (typeof output) -> string
         if (isNaN(parseInt(input))) {
@@ -391,8 +377,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv2_Q2(input) {
         // progress bar
         fnStep2();
-        // json
-        personInfo.hate = input;
         // data processing
         // if (typeof output) -> string
         if (isNaN(parseInt(input))) {
@@ -456,8 +440,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv2_Q3(input) {
         // progress bar
         fnStep2();
-        // json
-        personInfo.season = input;
         // data processing
         var weatherDic = {
             0: ['다', '모든', 'all', 'every'], // contains case of 'prefer not to say'
@@ -496,8 +478,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv2_Q4(input) {
         // progress bar
         fnStep2();
-        // json
-        personInfo.important = input;
         // data processing
         var importantDic = {
             0: ['가족', '친구', '사람', 'family', 'friend', 'human'],
@@ -532,8 +512,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv2_Q5(input) {
         // progress bar
         fnStep2();
-        // json
-        personInfo.friend = input;
         // data processing
         // if (typeof output) -> string
         if (isNaN(parseInt(input))) {
@@ -582,8 +560,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv3_Q1(input) {
         // progress bar
         fnStep3();
-        // json
-        personInfo.myself = input;
         // data processing
         // node.js 통해 python 함수 호출, 인자 발신
         //lv3q1_input = input;
@@ -600,6 +576,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return lv3q1_input;
         });
         */
+        document.getElementById("Lv3_Q1").innerText = input;
         document.getElementById("ko").innerText = "당신의 내면은 어떤 색깔인지 설명해줄래요?";  // questionSeq = 9
         document.getElementById("en").innerText = "Could you explain what color you have on the inside?";
     }
@@ -608,8 +585,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv3_Q2(input) {
         // progress bar
         fnStep3();
-        // json
-        personInfo.color = input;
         // data processing
         // node.js 통해 python 함수 호출, return 값 수신
         /*
@@ -631,8 +606,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv3_Q3(input) {
         // progress bar
         fnStep3();
-        // json
-        personInfo.purity = input;
         // data processing
         var percentDic = {
             0: ['영', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'],
@@ -691,8 +664,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv3_Q4(input) {
         // progress bar
         fnStep3();
-        // json
-        personInfo.secret = input;
         // data processing
         for (let i = 0; i < Object.keys(yesOrNoDic).length; i++) {
             for (let j = 0; j < yesOrNoDic[i].length; j++) {
@@ -717,8 +688,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv3_Q5(input) {
         // progress bar
         fnStep3();
-        // json
-        personInfo.accuracyOfAI = input;
         // data processing
         for (let i = 0; i < Object.keys(yesOrNoDic).length; i++) {
             for (let j = 0; j < yesOrNoDic[i].length; j++) {
@@ -803,7 +772,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         outputSentenceKo = "당신은 " + Lv1outputKo + ", " + Lv2outputKo + ", \n그리고 " + Lv3outputKo + " 사람이네요.";
         outputSentenceEn = "You are a person who is " + Lv1outputEn + ",\n" + Lv2outputEn + ", \n" + Lv3outputEn;
-        // json
+        // 인쇄 양식
+        document.getElementById("outputKo").innerText = outputSentenceKo;
+        document.getElementById("outputEn").innerText = outputSentenceEn;
         // previous variable data initialization: 변수에 저장된 이전 값 초기화
         gender = -1; age = -1; region = -1; degree = -1; marriage = -1; love = -1; hate = -1; friend = -1; weather = -1; important = -1;
         genderScore = -1; ageScore = -1; regionScore = -1; degreeScore = -1; marriageScore = -1; loveScore = 0; hateScore = 0; friendScore = 0; weatherScore = 0; importantScore = 0; percentScore = -1; secretScore = -1;
@@ -851,7 +822,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let icosahedronGeometry = new THREE.IcosahedronGeometry(30, 8);
         let lambertMaterial = new THREE.MeshPhongMaterial({wireframe: true, vertexColors: true});
         nucleus = new THREE.Mesh(icosahedronGeometry, lambertMaterial);
-        nucleus.position.set(0, 10, 0)
+        nucleus.position.set(0, 0, 0)
         scene.add(nucleus);
 
         function randomPointSphere (radius) {
@@ -917,7 +888,6 @@ document.addEventListener("DOMContentLoaded", () => {
             questionSeq++;
             let input = inputField.value;
             inputField.value = "";
-
             // input 먼저 받은 후 처리 및 다음 질문 출력
             // Lv1 질문은 순서대로 출력
             if (questionSeq == 1) {Lv1_Q1(input);}
@@ -1103,6 +1073,19 @@ document.addEventListener("DOMContentLoaded", () => {
                         window.location.href="start.html";
                     });
                     */
+                    var initBody = document.body.innerHTML;
+                    function printSet() {
+                        document.getElementById("screen").style.display = "none";
+                        document.getElementById("print").style.display = "block";
+                        window.onbeforeprint = function() {
+                            document.body.innerHTML = document.getElementById("print");
+                        }
+                        window.onafterprint = function() {
+                            document.body.innerHTML = initBody;
+                        }
+                        window.print();
+                    }
+                    printSet();
                     window.location.href="start.html";
                 }
             }
