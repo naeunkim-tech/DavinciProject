@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+    var personInfo = new Object();
     
 
+    /* delay */
     function sleep(ms) {
         return new Promise((r) => setTimeout(r, ms));
     }
@@ -107,6 +110,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv1_Q1(input) {
         // progress bar
         fnStep1();
+        // json
+        personInfo.gender = input;
+        // data processing
         var genderDic = {
             0: ['여', '여자', '여성', 'female', 'woman', 'girl', 'she', 'her'],
             1: ['남', '남자', '남성', 'male', 'man', 'boy', 'he', 'him'],
@@ -141,6 +147,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv1_Q2(input) {
         // progress bar
         fnStep1();
+        // json
+        personInfo.age = input;
+        // data processing
         var ageDic = {
             0: ['한', '하나', 'one', '두', '둘', 'two', '세', '셋', 'three', '네', '넷', 'four', '다섯', 'five', '여섯', 'six', '일곱', 'seven', '여덟', 'eight', '아홉', 'nine'], // under teens, contains 0-9
             1: ['열', '십', 'ten', 'eleven', 'twelve', 'teen'], // teens, contains 10-19
@@ -192,6 +201,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv1_Q3(input) {
         // progress bar
         fnStep1();
+        // json
+        personInfo.region = input;
+        // data processing
         var regionDic = {
             0: ['서울', 'seoul'],
             1: ['부산', 'busan', '대구', , 'daegu', '인천', 'incheon', '광주', 'gwangju', '대전', 'daejeon', '울산', 'ulsan', '세종', 'sejong', '광역'],
@@ -218,7 +230,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if (region == 3) {
             regionScore = 1.5;
         }
-        document.getElementById("ko").innerText = "당신이 완료 한 가장 높은 교육 수준은 무엇입니까?";  // questionSeq = 3
+        document.getElementById("ko").innerText = "당신이 완료한 가장 높은 교육 수준은 무엇입니까?";  // questionSeq = 3
         document.getElementById("en").innerText = "What is the highest degree or level of education you have completed?";
         return regionScore;
     }
@@ -227,6 +239,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv1_Q4(input) {
         // progress bar
         fnStep1();
+        // json
+        personInfo.degree = input;
+        // data processing
         var degreeDic = {
             0: ['유치원', 'kindergarten', 'preschool', 'nursery'],
             1: ['초등', '초딩', '초졸', 'elementary', 'primary'],
@@ -269,7 +284,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             degreeScore = 0;
         }
-        document.getElementById("ko").innerText = "결혼했나요?";  // questionSeq = 4
+        document.getElementById("ko").innerText = "결혼했습니까?";  // questionSeq = 4
         document.getElementById("en").innerText = "Are you married?";
         return degreeScore;
     }
@@ -278,6 +293,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv1_Q5(input) {
         // progress bar
         fnStep1();
+        // json
+        personInfo.marriage = input;
+        // data processing
         var marriageDic = {
             0: ['네', '예', '응', '어', 'ㅇ', '했', '기혼', '약혼', '있', 'yes', 'engage'],
             1: ['아니', '아뇨', '안', 'ㄴ', '미혼', '없', '혼자', '독신', 'no'],
@@ -308,6 +326,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv2_Q1(input) {
         // progress bar
         fnStep2();
+        // json
+        personInfo.love = input;
+        // data processing
         // if (typeof output) -> string
         if (isNaN(parseInt(input))) {
             // 십의 자리만 판별, 따라서 90부터 10까지 내림차순 확인
@@ -370,6 +391,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv2_Q2(input) {
         // progress bar
         fnStep2();
+        // json
+        personInfo.hate = input;
+        // data processing
         // if (typeof output) -> string
         if (isNaN(parseInt(input))) {
             // 십의 자리만 판별, 따라서 90부터 10까지 내림차순 확인
@@ -432,6 +456,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv2_Q3(input) {
         // progress bar
         fnStep2();
+        // json
+        personInfo.season = input;
+        // data processing
         var weatherDic = {
             0: ['다', '모든', 'all', 'every'], // contains case of 'prefer not to say'
             1: ['봄', 'spring'],
@@ -469,6 +496,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv2_Q4(input) {
         // progress bar
         fnStep2();
+        // json
+        personInfo.important = input;
+        // data processing
         var importantDic = {
             0: ['가족', '친구', '사람', 'family', 'friend', 'human'],
             1: ['사랑', 'love', '우정', 'friendship', '행복', 'happy', 'happiness', '여유', 'relax', '평온', 'peace', '열정', 'passion'],
@@ -502,6 +532,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv2_Q5(input) {
         // progress bar
         fnStep2();
+        // json
+        personInfo.friend = input;
+        // data processing
         // if (typeof output) -> string
         if (isNaN(parseInt(input))) {
             // 십의 자리만 판별, 따라서 90부터 10까지 내림차순 확인
@@ -549,41 +582,58 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv3_Q1(input) {
         // progress bar
         fnStep3();
+        // json
+        personInfo.myself = input;
+        // data processing
         // node.js 통해 python 함수 호출, 인자 발신
-        lv3q1_input = input;
+        //lv3q1_input = input;
+        /*
         return $.ajax({
             type:'POST',
             url: '/data',
             accept: "application/json",
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({ data: input }),
+            data: JSON.stringify(personInfo.myself, null, "\t"),
         }).done(function(data){
             document.getElementById("ko").innerText = "당신의 내면은 어떤 색깔인지 설명해줄래요?";  // questionSeq = 9
             document.getElementById("en").innerText = "Could you explain what color you have on the inside?";
             return lv3q1_input;
         });
+        */
+        document.getElementById("ko").innerText = "당신의 내면은 어떤 색깔인지 설명해줄래요?";  // questionSeq = 9
+        document.getElementById("en").innerText = "Could you explain what color you have on the inside?";
     }
     // input 받아 questionSeq = 10, Lv3_Q2() 시작
     // Lv3_Q2. 당신의 내면은 어떤 색깔인지 설명해줄래요?
     function Lv3_Q2(input) {
         // progress bar
         fnStep3();
+        // json
+        personInfo.color = input;
+        // data processing
         // node.js 통해 python 함수 호출, return 값 수신
+        /*
         $.ajax({
             type:'GET',
             url: '/run?input=' + input,
         }).done(function(data){
-            console.log(data);
+            alert(data);
 
             document.getElementById("ko").innerText = "내가 당신을 몇 퍼센트 이해할 수 있다고 생각하나요?";  // questionSeq = 9
             document.getElementById("en").innerText = "How much do you think I can understand you?";
         });
+        */
+        document.getElementById("ko").innerText = "내가 당신을 몇 퍼센트 이해할 수 있다고 생각하나요?";  // questionSeq = 9
+        document.getElementById("en").innerText = "How much do you think I can understand you?";
     }
     // input 받아 questionSeq = 11, Lv3_Q3() 시작
     // Lv3_Q3. 내가 당신을 몇 퍼센트 이해할 수 있다고 생각하나요?
     function Lv3_Q3(input) {
         // progress bar
         fnStep3();
+        // json
+        personInfo.purity = input;
+        // data processing
         var percentDic = {
             0: ['영', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'],
             1: ['십', 'ten', 'eleven', 'twelve', 'teen'],
@@ -632,7 +682,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             percentScore = 0;
         }
-        document.getElementById("ko").innerText = "당신이 평생 누구에게도 말하지 않은 비밀이 있습니까?";  // questionSeq = 11
+        document.getElementById("ko").innerText = "평생 누구에게도 말하지 않은 비밀이 있습니까?";  // questionSeq = 11
         document.getElementById("en").innerText = "Is there a secret from your life that you've never told anyone?";
         return percentScore;
     }
@@ -641,6 +691,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv3_Q4(input) {
         // progress bar
         fnStep3();
+        // json
+        personInfo.secret = input;
+        // data processing
         for (let i = 0; i < Object.keys(yesOrNoDic).length; i++) {
             for (let j = 0; j < yesOrNoDic[i].length; j++) {
                 if ((input.toLowerCase()).indexOf(yesOrNoDic[i][j]) !== -1) {
@@ -664,6 +717,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv3_Q5(input) {
         // progress bar
         fnStep3();
+        // json
+        personInfo.accuracyOfAI = input;
+        // data processing
         for (let i = 0; i < Object.keys(yesOrNoDic).length; i++) {
             for (let j = 0; j < yesOrNoDic[i].length; j++) {
                 if ((input.toLowerCase()).indexOf(yesOrNoDic[i][j]) !== -1) {
@@ -747,6 +803,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         outputSentenceKo = "당신은 " + Lv1outputKo + ", " + Lv2outputKo + ", \n그리고 " + Lv3outputKo + " 사람이네요.";
         outputSentenceEn = "You are a person who is " + Lv1outputEn + ",\n" + Lv2outputEn + ", \n" + Lv3outputEn;
+        // json
         // previous variable data initialization: 변수에 저장된 이전 값 초기화
         gender = -1; age = -1; region = -1; degree = -1; marriage = -1; love = -1; hate = -1; friend = -1; weather = -1; important = -1;
         genderScore = -1; ageScore = -1; regionScore = -1; degreeScore = -1; marriageScore = -1; loveScore = 0; hateScore = 0; friendScore = 0; weatherScore = 0; importantScore = 0; percentScore = -1; secretScore = -1;
@@ -756,258 +813,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* audio */
     var noise = new SimplexNoise();
-    //var audio = new Audio("test.mp3");
-    //audio.play();
-    //audio.autoplay = true;
-    //audio.loop = true;
-    //audio.volume = 0.2;
-
-
-    /* three.js */
-    /*
-    function startViz() {
-        
-        //audio anayser setup
-        var context = new AudioContext();
-        var src = context.createMediaElementSource(audio);
-        var analyser = context.createAnalyser();
-        src.connect(analyser);
-        analyser.connect(context.destination);
-        analyser.fftSize = 512;
-        var bufferLength = analyser.frequencyBinCount;
-        var dataArray = new Uint8Array(bufferLength);
-    
-        //webgl
-        var scene = new THREE.Scene();
-        var group = new THREE.Group();
-        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 100;
-        scene.add(camera);
-    
-
-        var renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setClearColor(0x000000);
-        renderer.setSize(window.innerWidth, window.innerHeight);
-
-        document.getElementById('container').appendChild(renderer.domElement);
-    
-        // IcosahedronGeometry(크기: Float, 면수: Integer)
-        var geometry = new THREE.IcosahedronGeometry(15, 1);
-        var wireframe = new THREE.EdgesGeometry(geometry);
-        //var icosahedronGeometry = new THREE.IcosahedronGeometry(20, 1);
-        
-        var lambertMaterial = new THREE.MeshLambertMaterial({
-            color: 0xffffff,
-            wireframe: true
-        });
-        
-    
-        var material = new THREE.ShaderMaterial({
-            uniforms: {
-                color1: {
-                    value: new THREE.Color("#fff1eb")
-                },
-                color2: {
-                    value: new THREE.Color("#3d3d3d")
-                }
-            },
-            vertexShader: `
-              varying vec2 vUv;
-          
-              void main() {
-                vUv = uv;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-              }
-            `,
-            fragmentShader: `
-              uniform vec3 color1;
-              uniform vec3 color2;
-              
-              varying vec2 vUv;
-              
-              void main() {
-                gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
-              }
-            `,
-            wireframe: true
-        });
-    
-        var ambientLight = new THREE.AmbientLight(0xaaaaaa);
-        scene.add(ambientLight);
-    
-        //var ball = new THREE.Mesh(icosahedronGeometry, lambertMaterial);
-        //ball.position.set(0, 0, 0);
-
-        //original
-        var ball = new THREE.Mesh(geometry, material);
-        ball.position.set(0, 10, 0);
-
-        group.add(ball);
-        scene.add(group);
-    
-        window.addEventListener('resize', () => {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-        });
-    
-        function render() {
-            analyser.getByteFrequencyData(dataArray);
-    
-            var lowerHalfArray = dataArray.slice(0, (dataArray.length / 2) - 1);
-            var upperHalfArray = dataArray.slice((dataArray.length / 2) - 1, dataArray.length - 1);
-    
-            var overallAvg = avg(dataArray);
-            var lowerMax = max(lowerHalfArray);
-            var lowerAvg = avg(lowerHalfArray);
-            var upperMax = max(upperHalfArray);
-            var upperAvg = avg(upperHalfArray);
-    
-            var lowerMaxFr = lowerMax / lowerHalfArray.length;
-            var lowerAvgFr = lowerAvg / lowerHalfArray.length;
-            var upperMaxFr = upperMax / upperHalfArray.length;
-            var upperAvgFr = upperAvg / upperHalfArray.length;
-    
-            ball.rotation.x += 0.001;
-            ball.rotation.y += 0.005;
-            ball.rotation.z += 0.002;
-    
-            WarpBall(ball, modulate(Math.pow(lowerMaxFr, 0.8), 0, 1, 0, 8), modulate(upperAvgFr, 0, 1, 0, 4));
-    
-            requestAnimationFrame(render);
-            renderer.render(scene, camera);
-        };
-    
-        function WarpBall(mesh, bassFr, treFr) {
-            mesh.geometry.vertices.forEach(function (vertex, i) {
-                var offset = mesh.geometry.parameters.radius;
-                var amp = 5;
-                var time = window.performance.now();
-                vertex.normalize();
-                var rf = 0.00001;
-                var distance = (offset + bassFr) + noise.noise3D(vertex.x + time*rf*6, vertex.y + time*rf*7, vertex.z + time*rf*8) * amp * treFr;
-                vertex.multiplyScalar(distance);
-            });
-            mesh.geometry.verticesNeedUpdate = true;
-            mesh.geometry.normalsNeedUpdate = true;
-            mesh.geometry.computeVertexNormals();
-            mesh.geometry.computeFaceNormals();
-        }
-        render();
-        */
-        
-        /*
-        const scene = new THREE.Scene(),
-            width = window.innerWidth,
-            height = window.innerHeight,
-            camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000),
-            renderer = new THREE.WebGLRenderer(),
-            startTime = new Date().getTime(),
-            timeOffset = 15
-
-        let currentTime = 0
-
-        renderer.setSize(window.innerWidth, window.innerHeight)
-        document.getElementById('container').appendChild(renderer.domElement)
-
-        let CameraHolder = new THREE.Object3D()
-        CameraHolder.add(camera)
-        CameraHolder.rotation.x = Math.PI * .15;
-        scene.add(CameraHolder)
-
-        const composer = new THREE.EffectComposer(renderer)
-
-        const renderPass = new THREE.RenderPass(scene, camera);
-        composer.addPass(renderPass);
-
-        var outlinePass = new THREE.OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene, camera);
-        composer.addPass(outlinePass);
-
-        let bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(width, height), 1.5, .4, .85);
-        renderer.toneMappingExposure = 1;
-        bloomPass.threshold = 0;
-        bloomPass.strength = 1.5;
-        bloomPass.radius = 1.5;
-        composer.addPass(bloomPass);
-
-        let filmPass = new THREE.FilmPass(0.34, 0.025, 256, false);
-        composer.addPass(filmPass);
-
-        outlinePass.edgeStrength = 3
-        outlinePass.edgeThickness = 1
-        outlinePass.edgeGlow = 0
-        outlinePass.visibleEdgeColor.set('#ffffff')
-        outlinePass.hiddenEdgeColor.set('#ffffff')
-        outlinePass.BlurDirectionX = new THREE.Vector2(0.0, 0.0)
-        outlinePass.BlurDirectionY = new THREE.Vector2(0.0, 0.0)
-
-        let uniforms = {
-            camera: {
-                value: camera.position
-            },
-            time: {
-                value: 0
-            }
-        }
-
-        //var geometry = new THREE.PlaneGeometry(Math.round(width * 0.005), Math.round(height * 0.005), 600, 600);
-        var geometry = new THREE.SphereGeometry(1, 100, 100);
-        // var geometry = new THREE.TorusGeometry(2, 1, 32, 200);
-        let material = new THREE.ShaderMaterial({
-            uniforms: uniforms,
-            fragmentShader: shaders.cloth.fragment,
-            vertexShader: shaders.cloth.vertex
-        })
-        var plane = new THREE.Mesh(geometry, material);
-        scene.add(plane);
-        camera.position.z = 28
-
-        function animate() {
-            var now = new Date().getTime();
-            currentTime = (now - startTime) / 1000;
-            let t = currentTime + timeOffset;
-
-            CameraHolder.updateMatrixWorld();
-            var vector = camera.position.clone();
-            vector.applyMatrix4(camera.matrixWorld);
-
-            uniforms.time.value = t;
-            uniforms.camera.value = vector;
-
-            //camera.fov = 55 + Math.cos(t) * 50;
-            camera.position.z = 3 + Math.cos(t) * -1;
-            camera.updateProjectionMatrix();
-
-            //CameraHolder.rotation.z = t * 0.1
-            //CameraHolder.rotation.x =  Math.cos(t * 0.15) * (Math.PI * .25)
-
-            requestAnimationFrame(animate)
-            //renderer.render(scene, camera)
-            composer.render()
-        }
-        animate()
-    };
-    startViz();
-    //helper functions
-    function fractionate(val, minVal, maxVal) {
-        return (val - minVal) / (maxVal - minVal);
-    }
-    
-    function modulate(val, minVal, maxVal, outMin, outMax) {
-        var fr = fractionate(val, minVal, maxVal);
-        var delta = outMax - outMin;
-        return outMin + (fr * delta);
-    }
-    
-    function avg(arr) {
-        var total = arr.reduce(function (sum, b) { return sum + b; });
-        return (total / arr.length);
-    }
-    
-    function max(arr) {
-        return arr.reduce(function (a, b) { return Math.max(a, b); })
-    */
-
     let renderer,
     scene,
     camera,
@@ -1123,15 +928,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 var Lv2_Q = {
                     0: ["당신이 이 세상에서 사랑한다고 말할 수 있는 것은 몇 개나 됩니까?", "How many things can you say you love in this world?"],
                     1: ["당신이 이 세상에서 증오한다고 말할 수 있는 것은 몇 개나 됩니까?", "How many things can you say you hate in this world?"],
-                    2: ["당신은 어떤 계절을 좋아합니까?", "What is your favorite season?"],
+                    2: ["어떤 계절을 좋아합니까?", "What is your favorite season?"],
                     3: ["인생에서 가장 중요하게 생각하는 것은 무엇입니까?", "What is the most important value in your life?"],
-                    4: ["당신의 진정한 친구는 몇 명입니까?", "How many people can you rely on?"]
+                    4: ["진정한 친구는 몇 명입니까?", "How many people can you rely on?"]
                 }
                 if (questionSeq == 5) {
                     Lv1_Q5(input);
                     setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
                     sleep(2000)
                         .then(() => document.getElementById("answer").style.display ='none')
+                        .then(() => document.getElementById("continue").style.display ='none')
                         .then(() => document.getElementById("ko").innerText = "당신에 대한 기본적인 것은 알겠어요. 그래도 당신을 조금 더 알려주세요.")
                         .then(() => document.getElementById("en").innerText = "Tell me more about you.")
                         .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
@@ -1139,6 +945,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
                             .then(() => sleep(2000)
                                 .then(() => document.getElementById("answer").style.display = 'block')
+                                .then(() => document.getElementById("continue").style.display = 'block')
                                 .then(() => document.getElementById("ko").innerText = Lv2_Q[randomNums[0]][0])
                                 .then(() => document.getElementById("en").innerText = Lv2_Q[randomNums[0]][1])
                                 .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 200); inputintervalID = setInterval(inputFadeIN, 200)}))
@@ -1177,6 +984,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
                     sleep(2000)
                         .then(() => document.getElementById("answer").style.display ='none')
+                        .then(() => document.getElementById("continue").style.display ='none')
                         .then(() => document.getElementById("ko").innerText = "알겠습니다. 마지막으로 조금만 더 물어보겠습니다.")
                         .then(() => document.getElementById("en").innerText = "level 3")
                         .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
@@ -1184,6 +992,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
                             .then(() => sleep(2000)
                                 .then(() => document.getElementById("answer").style.display = 'block')
+                                .then(() => document.getElementById("continue").style.display = 'block')
                                 .then(() => document.getElementById("ko").innerText = "당신이 생각하는 당신은 어떤 사람입니까?")
                                 .then(() => document.getElementById("en").innerText = "What kind of person do you think you are?")
                                 .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100); inputintervalID = setInterval(inputFadeIN, 100)}))
@@ -1199,7 +1008,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (questionSeq == 12) {
                     Lv3_Q4(input);
                     function toTransition(){
-                        document.getElementById("level").style.display ='none';
+                        document.getElementById("progress-bar").style.display ='none';
                         document.getElementById("container").style.display ='none';
                         document.getElementById("output").style.display ='none';
                         document.getElementById("continue").style.display ='none';
@@ -1220,15 +1029,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     function fromTransition() {
                         document.getElementById("transition").style.display ='none';
                         document.getElementById('transitionVideo').style.display = 'none';
-                        document.getElementById("level").style.display ='block';
+                        document.getElementById("progress-bar").style.display ='block';
                         document.getElementById("container").style.display ='block';
                         document.getElementById("output").style.display ='block';
-                        document.getElementById("continue").style.display ='block';
                         document.body.style.backgroundColor = '#000000';
                     }
                     function transitionVideo() {
                         document.getElementById("transition").style.display ='none';
-                        document.getElementById("level").style.display ='none';
+                        document.getElementById("progress-bar").style.display ='none';
                         document.getElementById("container").style.display ='none';
                         document.getElementById("output").style.display ='none';
                         document.getElementById("continue").style.display ='none';
@@ -1237,9 +1045,10 @@ document.addEventListener("DOMContentLoaded", () => {
                         document.getElementById('transitionVideo').play();
                     }
                     let [outputKo, outputEn] = output();
-                    setTimeout(function() {textintervalID = setInterval(textFadeOut, 200); inputintervalID = setInterval(inputFadeOut, 200);});
-                    sleep(1000)
+                    setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
+                    sleep(2000)
                         .then(() => document.getElementById("answer").style.display ='none')
+                        .then(() => document.getElementById("continue").style.display ='none')
                         .then(() => document.getElementById("ko").innerText = "좋아요! 당신의 말하지 않은 내면을 들여다볼게요.")
                         .then(() => document.getElementById("en").innerText = "Briiliant! Let me see take a look at your unsaid inner world.")
                         .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
@@ -1247,7 +1056,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             .then(() => toTransition())
                             .then(() => sleep(5000)
                                 .then(() => transitionVideo())
-                                .then(() => sleep(5000)
+                                .then(() => sleep(7000)
                                     .then(() => fromTransition())
                                     .then(() => document.getElementById("ko").innerText = "오늘 우리가 나눈 이야기들로 나는 당신을 완전히 이해했어요.")
                                     .then(() => document.getElementById("en").innerText = "Through the stories we shared today, I completely understand you.")
@@ -1260,13 +1069,14 @@ document.addEventListener("DOMContentLoaded", () => {
                                             .then(() => document.getElementById("ko").innerText = outputKo)
                                             .then(() => document.getElementById("en").innerText = outputEn)
                                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
-                                            .then(() => sleep(15000)
+                                            .then(() => sleep(13000)
                                                 .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
                                                 .then(() => sleep(2000)
                                                     .then(() => document.getElementById("answer").style.display ='block')
+                                                    .then(() => document.getElementById("continue").style.display ='block')
                                                     .then(() => document.getElementById("ko").style.fontSize = "22px")
                                                     .then(() => document.getElementById("en").style.fontSize = "16px")
-                                                    .then(() => document.getElementById("ko").innerText = "당신의 자아가 내가 말하는 것과 일치하나요?")
+                                                    .then(() => document.getElementById("ko").innerText = "당신의 자아가 내가 말하는 것과 일치합니까?")
                                                     .then(() => document.getElementById("en").innerText = "Do you agree with what I am saying?")
                                                     .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100); inputintervalID = setInterval(inputFadeIN, 100)}))
                                                     .then(() => sleep(3000)
@@ -1281,8 +1091,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 if (questionSeq == 13) {
                     Lv3_Q5(input);
-                    accuracy = -1;
-                    // ENTER 누르면 'start' link 강제 클릭, 'index.gtml'로 이동
+                    /*
+                    // json
+                    $.ajax({
+                        type:'POST',
+                        url: '/data',
+                        accept: "application/json",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(personInfo, null, "\t"),
+                    }).done(function(data){
+                        window.location.href="start.html";
+                    });
+                    */
                     window.location.href="start.html";
                 }
             }
