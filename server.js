@@ -13,6 +13,10 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/start.html');
 });
 
+app.get('/print', (req, res) => {
+    res.sendFile(__dirname + '/print.html');
+});
+
 app.get('/run', (req, res) => {
     var options = {
         mode: 'text',
@@ -21,7 +25,6 @@ app.get('/run', (req, res) => {
         scriptPath: '',
         args: [req.query.input]
     };
-
 
     return PythonShell.run('aifunction.py', options, function (err, result) {
         if (err) throw err;
@@ -36,7 +39,6 @@ app.post('/data', (req, res) => {
         const parseData = readFile.length > 1 ? JSON.parse(readFile) : [];
         parseData.push(data);
         fs.writeFileSync(__dirname + '/data.json', JSON.stringify(parseData));
-    
         res.send('success');
     } catch (err) {
         console.log(err);
