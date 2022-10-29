@@ -1078,9 +1078,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         document.getElementById("screen").style.display = "none";
                         document.getElementById("print").style.display = "block";
                         window.onbeforeprint = function() {
+                            document.body.style.backgroundColor = '#FFFFFF';
                             document.body.innerHTML = document.getElementById("print");
                         }
                         window.onafterprint = function() {
+                            document.body.style.backgroundColor = '#000000';
                             document.body.innerHTML = initBody;
                         }
                         window.print();
