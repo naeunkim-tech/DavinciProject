@@ -4,28 +4,36 @@
         <meta charset="utf-8">
     </head>
     <body>
-        <div class="line-progress" id="progress-bar">
-            <div class="area-progress">
-                <div class="kit-progress">
-                    <div class="progressStep" id="step-1"></div>
-                    <div class="progressStep" id="step-2"></div>
-                    <div class="progressStep" id="step-3"></div>
-              </div>
+        <div id="screen">
+            <div class="line-progress" id="progress-bar">
+                <div class="area-progress">
+                    <div class="kit-progress">
+                        <div class="progressStep" id="step-1"></div>
+                        <div class="progressStep" id="step-2"></div>
+                        <div class="progressStep" id="step-3"></div>
+                </div>
+                </div>
+            </div>
+            <div id="container"></div>
+            <div id="output">
+                <div id="ko">질문</div>
+                <div id="en">question</div>
+                <div id="answer">
+                    <input id="input" type="text" placeholder="Answer me." autofocus onkeyup="abledButton(this)">
+                </div>
+            </div>
+            <div id="continue">
+                <button id="continueButton" disabled>
+                    <p id="buttonKo">엔터키 눌러 제출</p>
+                    <p id="buttonEn">Press ENTER to submit</p>
+                </button>
             </div>
         </div>
-        <div id="container"></div>
-        <div id="output">
-            <div id="ko">질문</div>
-            <div id="en">question</div>
-            <div id="answer">
-                <input id="input" type="text" placeholder="Answer me." autofocus onkeyup="abledButton(this)">
-            </div>
-        </div>
-        <div id="continue">
-            <button id="continueButton" disabled>
-                <p id="buttonKo">엔터키 눌러 제출</p>
-                <p id="buttonEn">Press ENTER to submit</p>
-            </button>
+        <div id="print">
+            <h1>eXplainable Human</h1>
+            <p id="Lv3_Q1"></p>
+            <p id="outputKo"></p>
+            <p id="outputEn"></p>
         </div>
         <span id="transition"></span>
         <video src="test.mp4" id="transitionVideo"></video>
@@ -36,41 +44,41 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.3.0/simplex-noise.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
-    </body>
-    <script type="text/javascript">
-        /* input 값 개수가 0이거나 제한 초과 시 button disabled */
-        function abledButton() {
-            let textByte = 0;
-            let inputText = document.getElementById("input").value;
-            let inputChar = "";
-            let len = 0;
-            for (let i = 0; i < inputText.length; i++) {
-                inputChar = inputText.charAt(i);
-                if (escape(inputChar).length > 4) {
-                    textByte += 2;
+        <script type="text/javascript">
+            /* input 값 개수가 0이거나 제한 초과 시 button disabled */
+            function abledButton() {
+                let textByte = 0;
+                let inputText = document.getElementById("input").value;
+                let inputChar = "";
+                let len = 0;
+                for (let i = 0; i < inputText.length; i++) {
+                    inputChar = inputText.charAt(i);
+                    if (escape(inputChar).length > 4) {
+                        textByte += 2;
+                    } else {
+                        textByte++;
+                    }
+                    if (len <= 0) {
+                    len = i + 1;
+                    }
+                }
+                if (len > 0) {
+                    document.getElementById("continueButton").disabled = false;
                 } else {
-                    textByte++;
-                }
-                if (len <= 0) {
-                len = i + 1;
+                    document.getElementById("continueButton").disabled = true;
                 }
             }
-            if (len > 0) {
-                document.getElementById("continueButton").disabled = false;
-            } else {
-                document.getElementById("continueButton").disabled = true;
-            }
-        }
-        /*
-        document.getElementById("input").addEventListener('keyup', () => {
-            if (document.getElementById("input").value) {
-                document.getElementById("continueButton").disabled = false;
-            } else {
-                document.getElementById("continueButton").disabled = true;
-            }
-        })
-        */
-    </script>
+            /*
+            document.getElementById("input").addEventListener('keyup', () => {
+                if (document.getElementById("input").value) {
+                    document.getElementById("continueButton").disabled = false;
+                } else {
+                    document.getElementById("continueButton").disabled = true;
+                }
+            })
+            */
+        </script>
+    </body>
     <style>
         audio {
             display: none;
@@ -181,7 +189,7 @@
           fill: white;
         }
         .line-progress {
-          margin: 100px 0 0;
+          margin: 80px 0 0;
         }
         .line-progress > .area-progress {
           max-width: 1000px;
@@ -229,6 +237,9 @@
           width: 20px;
           height: 20px;
           z-index: 2;
+        }
+        #print {
+            display: none;
         }
         /* progress end */
     </style>
