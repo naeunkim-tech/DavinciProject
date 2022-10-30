@@ -27,12 +27,12 @@
                 <div id="ko">질문</div>
                 <div id="en">question</div>
                 <div id="answer">
-                    <input id="input" type="text" placeholder="Answer me." autofocus onkeyup="abledButton(this)">
+                    <input id="input" type="text" placeholder="답변을 입력해주십시오. Answer me." autofocus onkeyup="abledButton(this)">
                 </div>
             </div>
             <div id="continue">
                 <button id="continueButton" disabled>
-                    <p id="buttonKo">엔터키 눌러 제출</p>
+                    <p id="buttonKo"><br><br><br>엔터키를 눌러 제출</p>
                     <p id="buttonEn">Press ENTER to submit</p>
                 </button>
             </div>
@@ -192,35 +192,34 @@
             position: absolute;
             width: 100%;
             bottom: 18%;
-            background-color: rgb(0, 0, 0);
             color: rgb(255, 255, 255);
             text-align: center;
         }
         #ko {
             margin-bottom: 0.5%;
             font-size: 19px;
-            line-height: 120%;
+            line-height: 30px;
             font-family: 'Pretendard';
             font-weight: 300;
             text-shadow: 0 0 10px #ffffff;
         }
         #en {
-            font-size: 14px;
+            font-size: 16px;
             margin-bottom: 2%;
-            line-height: 120%;
+            line-height: 20px;
             font-family: 'Pretendard';
             font-weight: 300;
             text-shadow: 0 0 10px #ffffff;
         }
         #input {
             height: 50px;
-            width: 300px;
+            width: 450px;
             border-top: none;
             border-left: none;
             border-right: none;
-            background-color: rgb(0, 0, 0);
             border-bottom: 1px solid white;
             color: rgb(255, 255, 255);
+            background-color: transparent;
             font-size: 18px;
             text-align: center;
             font-family: 'Pretendard';
@@ -237,17 +236,18 @@
         #continue {
             width: 100%;
             position: absolute;
-            bottom: 8%;
+            bottom: 9%;
             text-align: center;
         }
         #continueButton {
             display: inline-block;
             background-color: rgb(223, 223, 223);
             color: rgb(0, 0, 0);
-            font-weight: bold;
             border: 1px solid rgb(223, 223, 223);
             padding: 3px;
             width: 180px;
+            font-family: 'Pretendard';
+            font-weight: 400;
             line-height: 5px;
         }
         #continueButton:disabled  {
