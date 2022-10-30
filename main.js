@@ -106,8 +106,8 @@ document.addEventListener("DOMContentLoaded", () => {
             this._setupModel();
     
             this.resize();
-            this.setCenter(0.5, 0.5);
-            this.setRadius(110);
+            this.setCenter(0.5, 0.7);
+            this.setRadius(100);
             this.setDisplacement(-5);
             this.setBreathTempo(1);
             this.setOrbitRadius(20);
@@ -857,44 +857,27 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv3_Q1(input) {
         // progress bar
         fnStep3();
-        // data processing
         // node.js 통해 python 함수 호출, 인자 발신
-        //lv3q1_input = input;
-        /*
+        lv3q1_input = input;
         return $.ajax({
             type:'POST',
             url: '/data',
             accept: "application/json",
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(personInfo.myself, null, "\t"),
+            data: JSON.stringify({ data: input}),
         }).done(function(data){
-            document.getElementById("ko").innerText = "당신의 내면은 어떤 색깔인지 설명해줄래요?";  // questionSeq = 9
+            document.getElementById("ko").innerText = "당신의 내면은 어떤 색인지 설명해주시겠습니까?";  // questionSeq = 9
             document.getElementById("en").innerText = "Could you explain what color you have on the inside?";
             return lv3q1_input;
         });
-        */
-        document.getElementById("ko").innerText = "당신의 내면은 어떤 색깔인지 설명해줄래요?";  // questionSeq = 9
-        document.getElementById("en").innerText = "Could you explain what color you have on the inside?";
     }
     // input 받아 questionSeq = 10, Lv3_Q2() 시작
     // Lv3_Q2. 당신의 내면은 어떤 색깔인지 설명해줄래요?
     function Lv3_Q2(input) {
         // progress bar
         fnStep3();
-        // data processing
-        // node.js 통해 python 함수 호출, return 값 수신
-        /*
-        $.ajax({
-            type:'GET',
-            url: '/run?input=' + input,
-        }).done(function(data){
-            alert(data);
-
-            document.getElementById("ko").innerText = "내가 당신을 몇 퍼센트 이해할 수 있다고 생각하나요?";  // questionSeq = 9
-            document.getElementById("en").innerText = "How much do you think I can understand you?";
-        });
-        */
-        document.getElementById("ko").innerText = "내가 당신을 몇 퍼센트 이해할 수 있다고 생각하나요?";  // questionSeq = 9
+        // ***** input 값을 영어로 번역한 후, aifunction.py 파일의 hexcode() 함수의 인자로 전달해야 합니다. *****
+        document.getElementById("ko").innerText = "내가 당신을 몇 퍼센트 이해할 수 있다고 생각합니까?";  // questionSeq = 9
         document.getElementById("en").innerText = "How much do you think I can understand you?";
     }
     // input 받아 questionSeq = 11, Lv3_Q3() 시작
@@ -1046,29 +1029,30 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (Lv3sum == 0) {
             Lv3outputKo = "페퍼민트의 톡 쏘는 향처럼 솔직하고 거침없는";
-            Lv3outputEn = "a straightforward and outspoken person just like the scent of peppermint strong and refreshing.";
+            Lv3outputEn = "a straightforward and outspoken person just like the scent of peppermint strong and refreshing";
         } else if (Lv3sum < 2) {
             Lv3outputKo = "나 자신에게 그 누구보다 솔직한";
-            Lv3outputEn = "honest with myself than anyone else.";
+            Lv3outputEn = "honest with myself than anyone else";
         } else if (Lv3sum >= 2 && Lv3sum < 3) {
             Lv3outputKo = "눈빛에서 진실함이 묻어나오는";
-            Lv3outputEn = "with eyes telling the truth.";
+            Lv3outputEn = "with eyes telling the truth";
         } else if (Lv3sum >= 3 && Lv3sum < 4) {
             Lv3outputKo = "내면이 흑과 백으로 섞여서 오묘한 빛을 내는";
-            Lv3outputEn = "creating a mysterious glow with a mixture of black and white.";
+            Lv3outputEn = "creating a mysterious glow with a mixture of black and white";
         } else if (Lv3sum >= 4 && Lv3sum < 5) {
             Lv3outputKo = "소중하게 간직한 내면의 비밀이 있는";
-            Lv3outputEn = "having a secret that you cherish.";
+            Lv3outputEn = "having a secret that you cherish";
         } else if (Lv3sum >= 5 && Lv3sum < 6) {
             Lv3outputKo = "비밀스러운 기억으로 속이 꽤나 시끄러운";
-            Lv3outputEn = "with secret memories may make noise due to them.";
+            Lv3outputEn = "with secret memories may make noise due to them";
         } else {
             Lv3outputKo = "무섭도록 정교한 고독을 품은";
-            Lv3outputEn = "chillingly lonely.";
+            Lv3outputEn = "chillingly lonely";
         }
-        outputSentenceKo = "당신은 " + Lv1outputKo + ", " + Lv2outputKo + ", \n그리고 " + Lv3outputKo + " 사람이네요.";
-        outputSentenceEn = "You are a person who is " + Lv1outputEn + ",\n" + Lv2outputEn + ", \n" + Lv3outputEn;
-        // 인쇄 양식
+        outputSentenceKo = "당신은 " + Lv1outputKo + ", " + Lv2outputKo + ", 그리고 " + Lv3outputKo + " 사람이네요.";
+        // ***** outputSentenceEn 값을 aifunction.py 파일의 makeSentence() 함수의 인자로 전달해야 합니다. *****
+        outputSentenceEn = "You are a person who is " + Lv1outputEn + ", " + Lv2outputEn + ", " + Lv3outputEn + ".";
+        // print format
         document.getElementById("outputKo1").innerText = Lv1outputKo;
         document.getElementById("outputEn1").innerText = Lv1outputEn;
         document.getElementById("outputKo2").innerText = Lv2outputKo;
@@ -1084,7 +1068,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Lv1-3 질문 순서대로 출력 */
     let questionSeq = 0;
-    document.getElementById("ko").innerText = "당신은 자신을 어떤 성별로 식별합니까?";
+    document.getElementById("ko").innerText = "당신은 스스로를 어떤 성별로 식별합니까?";
     document.getElementById("en").innerText = "What gender do you identify as?";
     var randomNums = [0, 0, 0];
     for (let i = 0; i < randomNums.length; i++) {
@@ -1117,10 +1101,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 if (questionSeq == 5) {
                     Lv1_Q5(input);
+                    document.getElementById("continue").style.display ='none';
                     setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
                     sleep(2000)
                         .then(() => document.getElementById("answer").style.display ='none')
-                        .then(() => document.getElementById("continue").style.display ='none')
                         .then(() => document.getElementById("ko").innerText = "당신에 대한 기본적인 것은 알겠어요. 그래도 당신을 조금 더 알려주세요.")
                         .then(() => document.getElementById("en").innerText = "Tell me more about you.")
                         .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
@@ -1128,11 +1112,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
                             .then(() => sleep(2000)
                                 .then(() => document.getElementById("answer").style.display = 'block')
-                                .then(() => document.getElementById("continue").style.display = 'block')
                                 .then(() => document.getElementById("ko").innerText = Lv2_Q[randomNums[0]][0])
                                 .then(() => document.getElementById("en").innerText = Lv2_Q[randomNums[0]][1])
-                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 200); inputintervalID = setInterval(inputFadeIN, 200)}))
-                                .then(() => sleep(3000)
+                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100); inputintervalID = setInterval(inputFadeIN, 100)}))
+                                .then(() => sleep(1000)
+                                    .then(() => document.getElementById("continue").style.display = 'block')
                                 )
                             )
                         )
@@ -1164,10 +1148,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (randomNums[2] == 2) {Lv2_Q3(input);}
                     if (randomNums[2] == 3) {Lv2_Q4(input);}
                     if (randomNums[2] == 4) {Lv2_Q5(input);}
+                    document.getElementById("continue").style.display ='none';
                     setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
                     sleep(2000)
                         .then(() => document.getElementById("answer").style.display ='none')
-                        .then(() => document.getElementById("continue").style.display ='none')
                         .then(() => document.getElementById("ko").innerText = "알겠습니다. 마지막으로 조금만 더 물어보겠습니다.")
                         .then(() => document.getElementById("en").innerText = "level 3")
                         .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
@@ -1175,11 +1159,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
                             .then(() => sleep(2000)
                                 .then(() => document.getElementById("answer").style.display = 'block')
-                                .then(() => document.getElementById("continue").style.display = 'block')
                                 .then(() => document.getElementById("ko").innerText = "당신이 생각하는 당신은 어떤 사람입니까?")
                                 .then(() => document.getElementById("en").innerText = "What kind of person do you think you are?")
                                 .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100); inputintervalID = setInterval(inputFadeIN, 100)}))
-                                .then(() => sleep(3000)
+                                .then(() => sleep(1000)
+                                    .then(() => document.getElementById("continue").style.display = 'block')
                                 )
                             )
                         )
@@ -1228,10 +1212,10 @@ document.addEventListener("DOMContentLoaded", () => {
                         document.getElementById('transitionVideo').play();
                     }
                     let [outputKo, outputEn] = output();
+                    document.getElementById("continue").style.display ='none';
                     setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
                     sleep(2000)
                         .then(() => document.getElementById("answer").style.display ='none')
-                        .then(() => document.getElementById("continue").style.display ='none')
                         .then(() => document.getElementById("ko").innerText = "좋아요! 당신의 말하지 않은 내면을 들여다볼게요.")
                         .then(() => document.getElementById("en").innerText = "Briiliant! Let me see take a look at your unsaid inner world.")
                         .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
@@ -1247,8 +1231,6 @@ document.addEventListener("DOMContentLoaded", () => {
                                     .then(() => sleep(3000)
                                         .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
                                         .then(() => sleep(2000)
-                                            .then(() => document.getElementById("ko").style.fontSize = "18px")
-                                            .then(() => document.getElementById("en").style.fontSize = "14px")
                                             .then(() => document.getElementById("ko").innerText = outputKo)
                                             .then(() => document.getElementById("en").innerText = outputEn)
                                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
@@ -1256,13 +1238,11 @@ document.addEventListener("DOMContentLoaded", () => {
                                                 .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
                                                 .then(() => sleep(2000)
                                                     .then(() => document.getElementById("answer").style.display ='block')
-                                                    .then(() => document.getElementById("continue").style.display ='block')
-                                                    .then(() => document.getElementById("ko").style.fontSize = "22px")
-                                                    .then(() => document.getElementById("en").style.fontSize = "16px")
                                                     .then(() => document.getElementById("ko").innerText = "당신의 자아가 내가 말하는 것과 일치합니까?")
                                                     .then(() => document.getElementById("en").innerText = "Do you agree with what I am saying?")
                                                     .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100); inputintervalID = setInterval(inputFadeIN, 100)}))
-                                                    .then(() => sleep(3000)
+                                                    .then(() => sleep(1000)
+                                                        .then(() => document.getElementById("continue").style.display ='block')
                                                     )
                                                 )
                                             )
@@ -1274,36 +1254,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 if (questionSeq == 13) {
                     Lv3_Q5(input);
-                    /*
-                    // json
-                    $.ajax({
-                        type:'POST',
-                        url: '/data',
-                        accept: "application/json",
-                        contentType: "application/json; charset=utf-8",
-                        data: JSON.stringify(personInfo, null, "\t"),
-                    }).done(function(data){
-                        window.location.href="start.html";
-                    });
-                    */
-                    var initBody = document.body.innerHTML;
-                    function printSet() {
-                        /*
-                        document.getElementById("screen").style.display = "none";
-                        document.getElementById("print").style.display = "block";
-                        window.onbeforeprint = function() {
-                            document.body.style.backgroundColor = '#FFFFFF';
-                            document.body.innerHTML = document.getElementById("print");
-                        }
-                        window.onafterprint = function() {
-                            document.body.style.backgroundColor = '#000000';
-                            document.body.innerHTML = initBody;
-                        }
-                        */
-                        window.print();
-                    }
-                    printSet();
-                    window.location.href="start.html";
+                    document.getElementById("continue").style.display ='none';
+                    setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
+                    sleep(2000)
+                        .then(() => document.getElementById("answer").style.display ='none')
+                        .then(() => document.getElementById("ko").innerText = "당신과 만날 수 있어서 기뻤습니다. 이제 뒤로 돌아나가서, 당신의 자아에 대한 영수증을 받아가세요.\n안녕히 가세요!")
+                        .then(() => document.getElementById("en").innerText = "It was an absolute pleasure speaking with you today. Now, turn around and get a receipt for your ego.\nGood bye!")
+                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100); inputintervalID = setInterval(inputFadeIN, 100)}))
+                        .then(() => sleep(3000)
+                            .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
+                            .then(() => sleep(5000)
+                                .then(() => window.print())
+                                .then(() => window.location.href="start.html")
+                            )
+                        )
                 }
             }
         }       
