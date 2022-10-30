@@ -13,25 +13,6 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/start.html');
 });
 
-app.get('/print', (req, res) => {
-    res.sendFile(__dirname + '/print.html');
-});
-
-app.get('/run', (req, res) => {
-    var options = {
-        mode: 'text',
-        pythonPath: '',
-        pythonOptions: ['-u'],
-        scriptPath: '',
-        args: [req.query.input]
-    };
-
-    return PythonShell.run('aifunction.py', options, function (err, result) {
-        if (err) throw err;
-        res.send(result);
-    });
-});
-
 app.post('/data', (req, res) => {
     try {
         const data = req.body.data;
