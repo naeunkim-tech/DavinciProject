@@ -1,5 +1,302 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+
+    /* circle */
+    const fragment = /* glsl */ `#version 300 es
+    precision highp float;
+
+    #define M_PI 3.1415926535897932384626433832795
+
+    uniform vec2 u_resolution;
+    uniform vec2 u_mouse;
+    uniform float u_time;
+    uniform float center_x;
+    uniform float center_y;
+    uniform float radius;
+    uniform float orbit_radius;
+    uniform float breath_tempo;
+    uniform float orbit_tempo;
+    uniform float displacement;
+    uniform vec3 color_a;
+    uniform vec3 color_b;
+    uniform float inner_blur_a;
+    uniform float inner_blur_b;
+    uniform float outer_blur_a;
+    uniform float outer_blur_b;
+    out vec4 outColor;
+
+    vec4 blurry_circle(float center_x, float center_y, float radius, float variable_radius, float breath_tempo, float inner_blur, float outer_blur, vec3 base_color);
+    vec4 blend(vec4 a, vec4 b);
+    vec4 the_circle(float cx, float cy, float r, float displacement, float or, float breath_tempo, float orbit_tempo, vec3 color_a, vec3 color_b, float inner_blur_a, float inner_blur_b, float outer_blur_a, float outer_blur_b);
+
+    void main(){
+        outColor = the_circle(center_x, center_y, radius, displacement, orbit_radius, breath_tempo, orbit_tempo, color_a, color_b, inner_blur_a, inner_blur_b, outer_blur_a, outer_blur_b);
+    }
+
+    vec4 the_circle(float cx, float cy, float r, float displacement, float or, float breath_tempo, float orbit_tempo, vec3 color_a, vec3 color_b, float inner_blur_a, float inner_blur_b, float outer_blur_a, float outer_blur_b){
+        float orbit_x = or * cos(u_time*orbit_tempo);
+        float orbit_y = or * sin(u_time*orbit_tempo);
+        vec4 pixel_color = blurry_circle(cx+orbit_x, cy+orbit_y, r+orbit_radius, r*0.2, breath_tempo, inner_blur_a*0.3, outer_blur_a*1.1, color_a);
+        pixel_color = blend(blurry_circle(cx, cy, r, r*0.2, breath_tempo, inner_blur_a, outer_blur_a, color_a), pixel_color);
+        pixel_color = blend(blurry_circle(cx, cy, r+displacement, r*0.2, breath_tempo, inner_blur_b, outer_blur_b, color_b), pixel_color);
+        
+        return pixel_color;
+    }
+    vec4 blend(vec4 a, vec4 b){
+        return a + b * (1.0 - a.a);
+    }
+    vec4 blurry_circle(float center_x, float center_y, float radius, float variable_radius, float breath_tempo, float inner_blur, float outer_blur, vec3 base_color){
+        float d = min(u_resolution.x, u_resolution.y);
+        vec2 st = gl_FragCoord.xy/vec2(d);
+        float cx = center_x/d;
+        float cy = center_y/d;
+        float r = radius/d;
+        float vr = variable_radius/d;
+        float ib = inner_blur/d;
+        float ob = outer_blur/d;
+        float pct = 0.0;
+        float inner_ratio = M_PI/ib;
+        float outer_ratio = M_PI/ob;
+        
+        float dist = distance(st,vec2(cx, cy));
+        
+        r += sin(u_time*breath_tempo)*vr/2.;
+        float th = (dist-r);
+        if(dist<=r){
+            th *= inner_ratio;
+        }
+        else{
+            th *= outer_ratio;
+        }
+        if (th<-M_PI || th>M_PI){
+        pct = 0.;
+        }else{
+        pct = (cos(th)/2.0)+0.5;
+        }
+        
+        vec3 color = base_color*pct;
+        
+        return vec4(color, pct);
+    }
+    `;
+    const vertex = /* glsl */ `#version 300 es
+    in vec4 a_position;
+
+    void main() {
+        gl_Position = a_position;
+    }
+    `;
+    class TheCircle {
+        constructor(canvas) {
+            this._initialize(canvas);
+        }
     
+        _initialize(canvas) {
+            this.canvas = canvas
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            canvas.style.backgroundColor = "black";
+            canvas.display = 'block';
+            canvas.top = 0;
+            canvas.left = 0;
+            this.gl = this.canvas.getContext("webgl2");
+    
+            this._setupShader();
+            this._setupEvents();
+            this._setupModel();
+    
+            this.resize();
+            this.setCenter(0.5, 0.5);
+            this.setRadius(110);
+            this.setDisplacement(-5);
+            this.setBreathTempo(1);
+            this.setOrbitRadius(20);
+            this.setOrbitTempo(4);
+            this.setColorA([0.3, 0.0, 0.7]);
+            this.setBlurA(66, 99);
+            this.setColorB([0.9, 0.9, 0.9]);
+            this.setBlurB(27.5, 82.5);
+            this.audio_bound = false;
+            this.audio = null;
+        }
+    
+        _setupShader() {
+            const gl = this.gl;
+            const program = webglUtils.createProgramFromSources(gl, [vertex, fragment]);
+    
+            gl.useProgram(program);
+    
+            this.program = program;
+        }
+    
+        _setupEvents() {
+            window.onresize = this.resize.bind(this);
+        }
+    
+        resize() {
+            const gl = this.gl;
+    
+            gl.canvas.width = window.innerWidth;
+            gl.canvas.height = window.innerHeight;
+            gl.uniform1f(this.centerXLocation, this.centerX*gl.canvas.width);
+            gl.uniform1f(this.centerYLocation, this.centerY*gl.canvas.height);
+            gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+        }
+    
+        _setupModel() {
+            const gl = this.gl;
+            const program = this.program;
+    
+            this.positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+            this.resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+            this.timeLocation = gl.getUniformLocation(program, "u_time");
+            this.centerXLocation = gl.getUniformLocation(program, "center_x");
+            this.centerYLocation = gl.getUniformLocation(program, "center_y");
+            this.radiusLocation = gl.getUniformLocation(program, "radius");
+            this.orbitRadiusLocation = gl.getUniformLocation(program, "orbit_radius");
+            this.breathTempoLocation = gl.getUniformLocation(program, "breath_tempo");
+            this.orbitTempoLocation = gl.getUniformLocation(program, "orbit_tempo");
+            this.colorALocation = gl.getUniformLocation(program, "color_a");
+            this.colorBLocation = gl.getUniformLocation(program, "color_b");
+            this.innerBlurALocation = gl.getUniformLocation(program, "inner_blur_a");
+            this.innerBlurBLocation = gl.getUniformLocation(program, "inner_blur_b");
+            this.outerBlurALocation = gl.getUniformLocation(program, "outer_blur_a");
+            this.outerBlurBLocation = gl.getUniformLocation(program, "outer_blur_b");
+            this.displacementLocation = gl.getUniformLocation(program, "displacement");
+    
+            const positionBuffer = gl.createBuffer();
+    
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+                -1, -1, 1, -1, -1,  1,
+                -1,  1, 1, -1,  1,  1,
+            ]), gl.STATIC_DRAW);
+    
+            gl.enableVertexAttribArray(this.positionAttributeLocation);
+    
+            gl.vertexAttribPointer(this.positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+        }
+    
+        bindAudio(audio) {
+            this.audio = audio;
+            this.audio_bound = true;
+            this.audio_context = new (window.AudioContext || window.webkitAudioContext)();
+            this.audio_source = this.audio_context.createMediaElementSource(audio);
+            this.analyser = this.audio_context.createAnalyser();
+            this.audio_source.connect(this.analyser);
+            this.analyser.connect(this.audio_context.destination);
+            this.analyser.fftSize = 128;
+            this.bufferLength = this.analyser.frequencyBinCount;
+            this.dataArray = new Uint8Array(this.bufferLength);
+            this.smooth_variance = 0.0;
+        }
+    
+        setRadius(radius) {
+            this.radius = radius/1.0;
+            const gl = this.gl;
+            gl.uniform1f(this.radiusLocation, this.radius);
+        }
+    
+        setDisplacement(displacement) {
+            this.displacement = displacement/1.0;
+            const gl = this.gl;
+            gl.uniform1f(this.displacementLocation, this.displacement);
+        }
+    
+        setOrbitRadius(orbitRadius) {
+            this.orbitRadius = orbitRadius/1.0;
+            const gl = this.gl;
+            gl.uniform1f(this.orbitRadiusLocation, this.orbitRadius);
+        }
+    
+        setCenter(x, y) {
+            this.centerX = x;
+            this.centerY = y;
+            const gl = this.gl;
+            gl.uniform1f(this.centerXLocation, x*gl.canvas.width);
+            gl.uniform1f(this.centerYLocation, y*gl.canvas.height);
+        }
+    
+        setBreathTempo(tempo) {
+            this.breath_tempo = tempo;
+            const gl = this.gl;
+            gl.uniform1f(this.breathTempoLocation, tempo);
+        }
+    
+        setOrbitTempo(tempo) {
+            this.orbit_tempo = tempo;
+            const gl = this.gl;
+            gl.uniform1f(this.orbitTempoLocation, tempo);
+        }
+    
+        setColorA(color) {
+            this.color_a = color;
+            const gl = this.gl;
+            gl.uniform3f(this.colorALocation, color[0], color[1], color[2]);
+        }
+    
+        setColorB(color) {
+            this.color_b = color;
+            const gl = this.gl;
+            gl.uniform3f(this.colorBLocation, color[0], color[1], color[2]);
+        }
+    
+        setBlurA(inner, outer) {
+            this.blur_a = [inner, outer];
+            const gl = this.gl;
+            gl.uniform1f(this.innerBlurALocation, inner);
+            gl.uniform1f(this.outerBlurALocation, outer);
+        }
+    
+        setBlurB(inner, outer) {
+            this.blur_b = [inner, outer];
+            const gl = this.gl;
+            gl.uniform1f(this.innerBlurBLocation, inner);
+            gl.uniform1f(this.outerBlurBLocation, outer);
+        }
+    
+        sound_interaction() {
+            let variance = 0;
+            let temp_size;
+            if (this.audio_bound && (this.audio.playState === "playing" || this.audio.paused === false)) {
+                this.analyser.getByteFrequencyData(this.dataArray);
+                variance = Math.max(this.dataArray[2] / 2 - 50, 0);
+                this.smooth_variance = this.smooth_variance * 0.9 + variance * 0.1;
+            }
+            else{
+                this.smooth_variance = 0;
+            }
+            temp_size = this.radius + this.smooth_variance;
+            const gl = this.gl;
+            gl.uniform1f(this.radiusLocation, temp_size);
+        }
+    
+        render(time) {
+            const gl = this.gl;
+            time *= 0.001;
+    
+            gl.uniform2f(this.resolutionLocation, gl.canvas.width, gl.canvas.height);
+            gl.uniform1f(this.timeLocation, time);
+            if(this.audio_bound){
+                this.sound_interaction();
+            }
+    
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+    
+            requestAnimationFrame(this.render.bind(this));
+        }
+    }
+    function run() {
+        audio = document.getElementById("audio");                   //HTML의 오디오 태그를 가져옴
+        let canvas = document.getElementById("the_circle_canvas")   //HTML의 캔버스 태그를 가져옴
+        circle = new TheCircle(canvas);                                     //TheCircle 객체 생성
+        circle.render(0);                                              //시작 시 render 함수를 호출하여 캔버스에 그림을 그림
+        document.body.scrollTop = 0;
+    }
+    window.onload = function () {   //페이지 로드시 실행
+        run();
+    }
+
 
     /* delay */
     function sleep(ms) {
@@ -576,7 +873,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return lv3q1_input;
         });
         */
-        document.getElementById("Lv3_Q1").innerText = input;
         document.getElementById("ko").innerText = "당신의 내면은 어떤 색깔인지 설명해줄래요?";  // questionSeq = 9
         document.getElementById("en").innerText = "Could you explain what color you have on the inside?";
     }
@@ -773,99 +1069,16 @@ document.addEventListener("DOMContentLoaded", () => {
         outputSentenceKo = "당신은 " + Lv1outputKo + ", " + Lv2outputKo + ", \n그리고 " + Lv3outputKo + " 사람이네요.";
         outputSentenceEn = "You are a person who is " + Lv1outputEn + ",\n" + Lv2outputEn + ", \n" + Lv3outputEn;
         // 인쇄 양식
-        document.getElementById("outputKo").innerText = outputSentenceKo;
-        document.getElementById("outputEn").innerText = outputSentenceEn;
+        document.getElementById("outputKo1").innerText = Lv1outputKo;
+        document.getElementById("outputEn1").innerText = Lv1outputEn;
+        document.getElementById("outputKo2").innerText = Lv2outputKo;
+        document.getElementById("outputEn2").innerText = Lv2outputEn;
+        document.getElementById("outputKo3").innerText = Lv3outputKo;
+        document.getElementById("outputEn3").innerText = Lv3outputEn;
         // previous variable data initialization: 변수에 저장된 이전 값 초기화
         gender = -1; age = -1; region = -1; degree = -1; marriage = -1; love = -1; hate = -1; friend = -1; weather = -1; important = -1;
         genderScore = -1; ageScore = -1; regionScore = -1; degreeScore = -1; marriageScore = -1; loveScore = 0; hateScore = 0; friendScore = 0; weatherScore = 0; importantScore = 0; percentScore = -1; secretScore = -1;
         return [outputSentenceKo, outputSentenceEn];
-    }
-
-
-    /* audio */
-    var noise = new SimplexNoise();
-    let renderer,
-    scene,
-    camera,
-    //sphereBg,
-    nucleus,
-    //controls,
-    container = document.getElementById("container"),
-    timeout_Debounce,
-    //cameraSpeed = 0,
-    blobScale = 3;
-    function init() {
-        scene = new THREE.Scene();
-
-        camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.01, 1000)
-        camera.position.set(0,0,230);
-    
-        const directionalLight = new THREE.DirectionalLight("#fff", 2);
-        directionalLight.position.set(0, 50, -20);
-        scene.add(directionalLight);
-    
-        let ambientLight = new THREE.AmbientLight(0xaaaaaa, 1);
-        ambientLight.position.set(0, 20, 20);
-        scene.add(ambientLight);
-    
-        renderer = new THREE.WebGLRenderer({
-            antialias: true,
-            alpha: true
-        });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        container.appendChild(renderer.domElement);
-        renderer.setClearColor(0x000000);
-
-        //const colours = chroma.scale(['#A947F2', '#FF29BD', '#FF5286', '#FF905C', '#FFC84F', '#F9F871']);
-
-        let icosahedronGeometry = new THREE.IcosahedronGeometry(30, 8);
-        let lambertMaterial = new THREE.MeshPhongMaterial({wireframe: true, vertexColors: true});
-        nucleus = new THREE.Mesh(icosahedronGeometry, lambertMaterial);
-        nucleus.position.set(0, 0, 0)
-        scene.add(nucleus);
-
-        function randomPointSphere (radius) {
-            let theta = 2 * Math.PI * Math.random();
-            let phi = Math.acos(2 * Math.random() - 1);
-            let dx = 0 + (radius * Math.sin(phi) * Math.cos(theta));
-            let dy = 0 + (radius * Math.sin(phi) * Math.sin(theta));
-            let dz = 0 + (radius * Math.cos(phi));
-            return new THREE.Vector3(dx, dy, dz);
-        }
-    }
-    function animate() {
-        nucleus.geometry.vertices.forEach(function (v) {
-            let time = Date.now();
-            v.normalize();
-            let distance = nucleus.geometry.parameters.radius + noise.noise3D(
-                v.x + time * 0.0005,
-                v.y + time * 0.0003,
-                v.z + time * 0.0008
-            ) * blobScale;
-            v.multiplyScalar(distance);
-        })
-
-        nucleus.geometry.verticesNeedUpdate = true;
-        nucleus.geometry.normalsNeedUpdate = true;
-        nucleus.geometry.computeVertexNormals();
-        nucleus.geometry.computeFaceNormals();
-        nucleus.rotation.y += 0.002;
-
-        //stars.geometry.verticesNeedUpdate = true;
-        renderer.render(scene, camera);
-        requestAnimationFrame(animate);
-    }
-    init();
-    animate();
-    window.addEventListener("resize", () => {
-        clearTimeout(timeout_Debounce);
-        timeout_Debounce = setTimeout(onWindowResize, 80);
-    });
-    function onWindowResize() {
-        camera.aspect = container.clientWidth / container.clientHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, container.clientHeight);
     }
 
 
@@ -979,7 +1192,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     Lv3_Q4(input);
                     function toTransition(){
                         document.getElementById("progress-bar").style.display ='none';
-                        document.getElementById("container").style.display ='none';
+                        document.getElementById("the_circle_canvas").style.display ='none';
                         document.getElementById("output").style.display ='none';
                         document.getElementById("continue").style.display ='none';
                         document.body.style.backgroundColor = '#0000CD'; 
@@ -1000,14 +1213,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         document.getElementById("transition").style.display ='none';
                         document.getElementById('transitionVideo').style.display = 'none';
                         document.getElementById("progress-bar").style.display ='block';
-                        document.getElementById("container").style.display ='block';
+                        document.getElementById("the_circle_canvas").style.display ='block';
                         document.getElementById("output").style.display ='block';
                         document.body.style.backgroundColor = '#000000';
                     }
                     function transitionVideo() {
                         document.getElementById("transition").style.display ='none';
                         document.getElementById("progress-bar").style.display ='none';
-                        document.getElementById("container").style.display ='none';
+                        document.getElementById("the_circle_canvas").style.display ='none';
                         document.getElementById("output").style.display ='none';
                         document.getElementById("continue").style.display ='none';
                         document.getElementById('transitionVideo').style.display = 'block';
@@ -1039,7 +1252,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                             .then(() => document.getElementById("ko").innerText = outputKo)
                                             .then(() => document.getElementById("en").innerText = outputEn)
                                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
-                                            .then(() => sleep(13000)
+                                            .then(() => sleep(4000)
                                                 .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
                                                 .then(() => sleep(2000)
                                                     .then(() => document.getElementById("answer").style.display ='block')
@@ -1075,6 +1288,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     */
                     var initBody = document.body.innerHTML;
                     function printSet() {
+                        /*
                         document.getElementById("screen").style.display = "none";
                         document.getElementById("print").style.display = "block";
                         window.onbeforeprint = function() {
@@ -1085,6 +1299,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             document.body.style.backgroundColor = '#000000';
                             document.body.innerHTML = initBody;
                         }
+                        */
                         window.print();
                     }
                     printSet();
@@ -1094,6 +1309,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }       
     });
 });
+
 
 /* progress bar */
 // progress start
