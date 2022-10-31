@@ -1,28 +1,26 @@
 <html>
     <head>
-    <title>Chatbot start</title>
+    <title>eXplainable Human</title>
     <meta charset="utf-8">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css" />
     </head>
     <body>
         <div id="start">
             <button id="startButton">
-                <p id="buttonKo">당신의 자아를 설명하려면 엔터키를 누르고 5초 대기하십시오.</p>
-                <p id="buttonEn">Press ENTER and wait 5 seconds to start explaining your self.</p>
+                <p id="buttonKo">당신의 자아를 설명하려면 엔터키를 누르십시오.</p>
+                <p id="buttonEn">Press ENTER to identify your ego.</p>
             </button>
         </div>
-        <video src="test.mp4" id="startVideo"></video>
+        <video src="intro.mp4" id="startVideo"></video>
     </body>
     <script type="text/javascript">
         function sleep(ms) {
             return new Promise((r) => setTimeout(r, ms));
         }
-        //const start = document.getElementById("start");
-        // ENTER 누르면 'start' link 강제 클릭, 'index.html'로 이동
         document.addEventListener("keydown", function(e) {
             if (e.keyCode == 13) {
                 document.getElementById("startButton").click();
-                sleep(5000).then(() => startVideo());
+                sleep(1000).then(() => startVideo());
             }
         })
         function startVideo() {
@@ -30,7 +28,8 @@
             document.getElementById('startVideo').style.display = 'block';
             document.getElementById('startVideo').style.height = String(window.innerHeight)+"px";
             document.getElementById('startVideo').play();
-            sleep(5000).then(() => window.location.href="main.html");
+            //introAudio.play();
+            sleep(13500).then(() => window.location.href="main.html");
         }
     </script>
     <style>
