@@ -142,6 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
             this.setBlurA(66, 99);
             this.setColorB([0.9, 0.9, 0.9]);
             this.setBlurB(27.5, 82.5);
+            this.setBackgroundColor([0.15, 0.35, 0.42], [0.1, 0.22, 0.29], [0.22, 0.34, 0.54]);
             this.audio_bound = false;
             this.audio = null;
         }
@@ -280,6 +281,33 @@ document.addEventListener("DOMContentLoaded", () => {
             gl.uniform1f(this.innerBlurBLocation, inner);
             gl.uniform1f(this.outerBlurBLocation, outer);
         }
+
+        setBackgroundColorA(color) {
+            this.background_color_a = color;
+            const gl = this.gl;
+            gl.uniform3f(this.backgroundColorALocation, color[0], color[1], color[2]);
+        }
+    
+        setBackgroundColorB(color) {
+            this.background_color_b = color;
+            const gl = this.gl;
+            gl.uniform3f(this.backgroundColorBLocation, color[0], color[1], color[2]);
+        }
+        setBackgroundColorC(color) {
+            this.background_color_c = color;
+            const gl = this.gl;
+            gl.uniform3f(this.backgroundColorCLocation, color[0], color[1], color[2]);
+        }
+    
+        setBackgroundColor(colorA, colorB, colorC) {
+            this.background_color_a = colorA;
+            this.background_color_b = colorB;
+            this.background_color_c = colorC;
+            const gl = this.gl;
+            gl.uniform3f(this.backgroundColorALocation, colorA[0], colorA[1], colorA[2]);
+            gl.uniform3f(this.backgroundColorBLocation, colorB[0], colorB[1], colorB[2]);
+            gl.uniform3f(this.backgroundColorCLocation, colorC[0], colorC[1], colorC[2]);
+        }
     
         sound_interaction() {
             let variance = 0;
@@ -313,9 +341,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     function run() {
-        audio = document.getElementById("audio");                   //HTML의 오디오 태그를 가져옴
         let canvas = document.getElementById("the_circle_canvas")   //HTML의 캔버스 태그를 가져옴
-        circle = new TheCircle(canvas);                                     //TheCircle 객체 생성
+        circle = new TheCircle(canvas);                                   //TheCircle 객체 생성
         circle.render(0);                                              //시작 시 render 함수를 호출하여 캔버스에 그림을 그림
         document.body.scrollTop = 0;
     }
@@ -903,8 +930,9 @@ document.addEventListener("DOMContentLoaded", () => {
         // progress bar
         fnStep3();
         // ******** input 값을 영어로 번역한 후, aifunction.py 파일의 hexcode() 함수의 인자로 전달해야 합니다. ********
+        // ******** python 파일 내 hexcode() 함수의 return 값을 받아와 변수 hexcode에 저장해야 합니다. ********
         document.getElementById("ko").innerText = "내가 당신을 몇 퍼센트 이해할 수 있다고 생각합니까?";  // questionSeq = 9
-        document.getElementById("en").innerText = "How much do you think I can understand you?";
+        document.getElementById("en").innerText = "What percentage do you think I can understand you?";
     }
     // input 받아 questionSeq = 11, Lv3_Q3() 시작
     // Lv3_Q3. 내가 당신을 몇 퍼센트 이해할 수 있다고 생각하나요?
@@ -961,7 +989,7 @@ document.addEventListener("DOMContentLoaded", () => {
             percentScore = 0;
         }
         document.getElementById("ko").innerText = "평생 누구에게도 말하지 않은 비밀이 있습니까?";  // questionSeq = 11
-        document.getElementById("en").innerText = "Is there a secret from your life that you've never told anyone?";
+        document.getElementById("en").innerText = "Do you have any secret that you've never told anyone?";
         return percentScore;
     }
     // input 받아 questionSeq = 12, Lv3_Q4() 시작
@@ -1076,8 +1104,11 @@ document.addEventListener("DOMContentLoaded", () => {
             Lv3outputEn = "chillingly lonely";
         }
         outputSentenceKo = "당신은 " + Lv1outputKo + ", " + Lv2outputKo + ", 그리고 " + Lv3outputKo + " 사람이네요.";
-        // ***** outputSentenceEn 값을 aifunction.py 파일의 makeSentence() 함수의 인자로 전달해야 합니다. *****
+        // ***** outputSentenceEn 값을 aifunction.py 파일의 sentences() 함수의 인자로 전달해야 합니다. *****
+        // ***** aifunction.py 파일의 sentences() 함수 return 값을 각각 영어, 한국어 번역본으로 javascript 파일에 받아와 변수 outputGPTEn, outputGPTKo에 저장해야 합니다. *****
         outputSentenceEn = "You are a person who is " + Lv1outputEn + ", " + Lv2outputEn + ", " + Lv3outputEn + ".";
+        outputGPTEn = "";
+        outputGPTKo = "";
         // print format
         document.getElementById("outputKo1").innerText = Lv1outputKo;
         document.getElementById("outputEn1").innerText = Lv1outputEn;
@@ -1093,6 +1124,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* Lv1-3 질문 순서대로 출력 */
+    var hexcode = "";
     let questionSeq = 0;
     document.getElementById("ko").innerText = "당신은 스스로를 어떤 성별로 식별합니까?";
     document.getElementById("en").innerText = "What gender do you identify as?";
@@ -1136,8 +1168,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     circle.setColorB([0.77, 0.66, 0.34]);
                     sleep(2000)
                         .then(() => document.getElementById("answer").style.display ='none')
-                        .then(() => document.getElementById("ko").innerText = "당신에 대한 기본적인 것은 알겠어요. 그래도 당신을 조금 더 알려주세요.")
-                        .then(() => document.getElementById("en").innerText = "Tell me more about you.")
+                        .then(() => document.getElementById("ko").innerText = "당신에 대한 기본적인 것은 알겠어요. 그래도 당신을 조금만 더 알아보고 싶군요.")
+                        .then(() => document.getElementById("en").innerText = "I understand the basics about you. But, let me figure you out more.")
                         .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
                         .then(() => sleep(3000)
                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
@@ -1188,8 +1220,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     circle.setColorB([0.52, 0.93, 0.95]);
                     sleep(2000)
                         .then(() => document.getElementById("answer").style.display ='none')
-                        .then(() => document.getElementById("ko").innerText = "알겠습니다. 마지막으로 조금만 더 물어보겠습니다.")
-                        .then(() => document.getElementById("en").innerText = "level 3")
+                        .then(() => document.getElementById("ko").innerText = "당신, 흥미롭군요. 마지막으로 조금만 더 물어보겠습니다.")
+                        .then(() => document.getElementById("en").innerText = "How interesting you are! I want to learn more about you.")
                         .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
                         .then(() => sleep(3000)
                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
@@ -1219,7 +1251,103 @@ document.addEventListener("DOMContentLoaded", () => {
                         // ******** python 파일 내 hexcode() 함수의 return 값을 받아 document.body.style.backgroundColor 값을 변경해야 합니다. ********
                         document.body.style.backgroundColor = '#0000CD'; 
 
-                        const content = "P̵̻̦̻͆r̴̜̗̈́̊͠e̸͎̦̪͐̀͒s̴̻̍̀͗s̶̨̡̉̈́ ̷̢͗̄̒Ę̶̄̓Ṋ̶͚̙̎̚͝T̴̫͊͋E̶͙̣̔̋̕ͅR̴͍̓̒̃͜ ̸͎̥̲̀͐̋i̶̡̗̓̾f̸̥̠̯̃͂̚ ̸̠̈́͗͘ÿ̸͇́͜ö̴̼̣́ͅṳ̷̪̽ ̸͖͇̭̂ẅ̸͓̗͉́a̴̟̰̮͐͆̉ṋ̶̠̗̍t̸̮̫̦̆̆̽ ̴͚̭͓͐͆t̷̻̳͐o̸̠̙̚ ̶̢͎̓̎͗t̶̩̱͛͑a̷͕̋̕ḷ̷̈͆͝ͅk̵̯͇͂̽͝ ̶̭̚ẘ̶͔̇̌ȋ̶̗͂͘t̴͕̭͈͘͘ḣ̴̝̥̏̕ ̷̪̟͊͝͝m̸͓̥̾̒e̸͕̩̊̎̈.̴̩́";  
+                        const content = 
+                            'c̵o̸n̸s̴t̴ ̸i̴n̶p̴u̷t̶F̶i̵e̸l̷d̸ ̵=̷ ̸d̴o̵c̴u̵m̷e̵n̷t̴.̴g̸e̸t̶E̶l̶e̴m̴e̶n̶t̴B̶y̵I̵d̵(̸"̸i̴n̶p̵u̷t̷"̵)̶;̷\n'
+                            + ' ̷ ̷ ̸ ̴ ̶i̶n̶p̴u̸t̶F̸i̵e̴l̴d̷.̶a̷d̴d̵E̴v̴e̴n̴t̶L̶i̶s̶t̴e̶n̷e̴r̵(̵"̴k̵e̵y̷d̶o̷w̷n̶"̷,̴ ̸f̵u̵n̶c̶t̴i̵o̶n̴(̶e̸)̶ ̵{̶\n'
+                            + ' ̷ ̷ ̴ ̸ ̵ ̸ ̴ ̶ ̷i̵f̸ ̸(̸e̷.̸k̶e̷y̷C̸o̵d̷e̸ ̶=̵=̴ ̶1̵3̸)̸ ̵{̶\n'
+                            + ' ̶ ̷ ̶ ̸ ̸ ̶ ̵ ̵ ̸ ̵ ̵ ̸ ̷q̸u̵e̶s̷t̶i̶o̷n̶S̶e̵q̴+̴+̷;̵\n'
+                            + ' ̷ ̴ ̷ ̸ ̴ ̷ ̸ ̵ ̵ ̷ ̶ ̸ ̴l̴e̸t̴ ̴i̵n̴p̷u̸t̴ ̶=̴ ̶i̴n̸p̵u̵t̸F̷i̴e̷l̵d̷.̶v̴a̸l̴u̸e̴;̸\n';
+                        /*
+                                ̶ ̷ ̶ ̴ ̵ ̶ ̷ ̴ ̵ ̶ ̴ ̴ ̷i̷n̴p̴u̴t̶F̸i̷e̸l̶d̶.̵v̵a̷l̷u̷e̵ ̷=̷ ̷\"̶\"̶;̴
+                                ̷ ̷ ̶ ̶ ̵ ̷ ̶ ̵ ̸ ̴ ̶ ̷ ̷i̴f̷ ̷(̵q̵u̴e̵s̸t̸i̶o̶n̵S̶e̴q̶ ̵=̵=̴ ̵1̵)̶ ̵{̵L̸v̸1̵_̷Q̷1̷(̶i̷n̵p̴u̴t̵)̴;̴}̸
+                                ̸ ̵ ̵ ̴ ̵ ̵ ̶ ̷ ̴ ̴ ̵ ̷ ̴i̸f̴ ̴(̸q̵u̵e̶s̸t̴i̶o̴n̶S̶e̸q̴ ̸=̵=̶ ̵2̷)̶ ̸{̴L̸v̷1̴_̷Q̶2̶(̶i̴n̵p̸u̷t̷)̸;̴}̷
+                                ̵ ̵ ̴ ̵ ̴ ̶ ̸ ̷ ̴ ̴ ̶ ̴ ̸i̸f̸ ̸(̵q̵u̸e̵s̵t̴i̵o̵n̸S̴e̴q̵ ̸=̵=̴ ̷3̶)̷ ̷{̶L̵v̷1̵_̴Q̶3̵(̴i̸n̷p̴u̴t̵)̴;̶}̴
+                                ̵ ̵ ̴ ̴ ̶ ̸ ̵ ̴ ̸ ̵ ̴ ̵ ̷i̸f̷ ̸(̶q̶u̸e̵s̸t̵i̸o̶n̷S̷e̷q̸ ̸=̴=̷ ̸4̷)̷ ̶{̴L̷v̶1̴_̷Q̵4̸(̶i̴n̵p̷u̵t̶)̶;̶}̶
+                                ̸ ̶ ̸ ̸ ̵ ̴ ̴ ̵ ̷ ̸ ̷ ̵ ̴i̵f̸ ̴(̶q̵u̵e̷s̴t̷i̵o̵n̵S̷e̴q̷ ̴>̷=̶ ̴5̴)̷ ̸{̴̷
+                                ̶ ̷ ̷ ̸ ̵ ̴ ̶ ̵ ̴ ̷ ̶ ̷ ̴ ̶ ̷ ̵ ̸i̸f̴ ̵(̵q̷u̸e̵s̷t̶i̸o̷n̶S̶e̶q̶ ̵=̶=̶ ̸5̵)̴ ̷{̶
+                                ̶ ̶ ̴ ̷ ̵ ̷ ̴ ̵ ̶ ̵ ̴ ̵ ̴ ̸ ̸ ̷ ̷ ̶ ̶ ̶ ̵L̴v̶1̷_̷Q̸5̸(̴i̵n̶p̸u̶t̶)̴;̷
+                                ̶ ̸ ̴ ̶ ̶ ̵ ̸ ̵ ̴ ̴ ̷ ̵ ̶ ̸ ̶ ̶ ̵ ̶ ̷ ̵ ̵d̷o̸c̴u̴m̴e̶n̶t̸.̷g̵e̴t̵E̴l̷e̵m̶e̵n̵t̸B̴y̶I̴d̶(̷"̸p̷r̷o̷g̷r̸e̸s̶s̶-̸b̸a̶r̴"̸)̴.̴s̷t̷y̸l̷e̵.̵v̸i̶s̵i̷b̸i̵l̷i̵t̵y̴ ̸=̷'̴h̸i̸d̸d̵e̸n̷'̵;̴
+                                ̸ ̴ ̵ ̵ ̵ ̶ ̴ ̵ ̷ ̴ ̷ ̸ ̷ ̵ ̸ ̸ ̶ ̸ ̷ ̷ ̴d̷o̸c̴u̶m̵e̵n̷t̸.̶g̶e̵t̸E̴l̷e̶m̶e̴n̷t̴B̵y̷I̴d̴(̷"̸c̵o̷n̵t̸i̴n̶u̵e̶"̶)̸.̷s̷t̸y̴l̶e̷.̶d̶i̴s̸p̷l̷a̷y̸ ̵≠'̸n̶o̴n̷e̶'̸;̶
+                                ̶ ̵ ̷ ̸ ̶ ̶ ̶ ̵ ̵ ̵ ̸ ̶ ̸ ̷ ̴ ̴ ̴ ̶ ̶ ̶ ̷s̸e̵t̵T̴i̶m̵e̴o̶u̸t̸(̶f̸u̴n̵c̵t̸i̶o̷n̸(̷)̸ ̵{̶t̷e̵x̴t̸i̵n̷t̸e̴r̶v̴a̴l̸I̸D̵ ̵=̷ ̴s̶e̶t̷I̴n̴t̶e̷r̶v̸a̶l̶(̵t̸e̶x̷t̴F̷a̷d̶e̷O̶u̷t̵,̴ ̸1̷0̷0̸)̶;̸ ̴i̴n̸p̷u̴t̶i̵n̴t̴e̶r̵v̸a̷l̴I̶D̴ ̸≠ ̵s̴e̸t̸I̷n̴t̵e̷r̴v̶a̸l̵(̸i̶n̸p̶u̴t̶F̴a̸d̸e̸O̷u̶t̶,̶ ̸1̷0̸0̸)̶;̷}̶)̵;̶
+                                ̶ ̵ ̵ ̷ ̶ ̵ ̸ ̷ ̴ ̸ ̴ ̵ ̷ ̵ ̵ ̸ ̷ ̴ ̸ ̸ ̷c̸i̵r̵c̸l̴e̴.̴s̵e̵t̴R̷a̵d̶i̵u̴s̴(̴7̶0̷)̴;̷
+                                ̷ ̴ ̴ ̴ ̶ ̶ ̴ ̷ ̶ ̶ ̷ ̷ ̷ ̸ ̵ ̸ ̷ ̷ ̵ ̷ ̴c̶i̴r̷c̵l̵e̴.̷s̵e̴t̴C̶o̸l̷o̸r̵A̶(̸[̴0̴.̵2̸6̵,̷ ̷0̶.̶0̷7̷,̵ ̸0̶.̴2̶5̴]̷)̶;̶
+                                ̶ ̶ ̸ ̴ ̸ ̸ ̵ ̴ ̴ ̷ ̸ ̴ ̵ ̷ ̶ ̶ ̷ ̶ ̴ ̸ ̸c̸i̸r̴c̵l̵e̶.̶s̸e̷t̴C̵o̶l̶o̶r̸B̶(̵[̷0̶.̷7̴7̶,̵ ̸0̶.̷6̸6̵,̶ ̵0̸.̷3̸4̵]̵)̸;̷
+                                ̷ ̴ ̶ ̸ ̸ ̶ ̸ ̴ ̴ ̸ ̷ ̸ ̸ ̷ ̵ ̴ ̷ ̴ ̵ ̷ ̴s̷l̴e̸e̸p̶(̵2̵0̷0̷0̷)̴
+                                ̵ ̷ ̴ ̷ ̵ ̷ ̵ ̸ ̵ ̵ ̵ ̸ ̵ ̴ ̶ ̸ ̶ ̶ ̷ ̴ ̵ ̷ ̷ ̸ ̶.̵t̷h̸e̶n̸(̷(̸)̵ ̵=̵>̴ ̷d̶o̶c̷u̸m̵e̶n̵t̶.̵g̴e̷t̴E̴l̶e̵m̶e̵n̶t̵B̵y̷I̵d̶(̴"̷a̵n̷s̸w̴e̴r̸"̶)̷.̷s̷t̶y̶l̴e̴.̷d̴i̸s̵p̸l̵a̵y̷ ̵=̵'̶n̷o̶n̵e̴'̴)̶
+                                ̷ ̶ ̴ ̴ ̶ ̴ ̸ ̵ ̸ ̴ ̷ ̶ ̴ ̸ ̴ ̴ ̶ ̵ ̵ ̷ ̸ ̵ ̴ ̸ ̷.̵t̷h̵e̷n̸(̵(̴)̷ ̷=̴≯ ̵d̵o̶c̷u̸m̶e̶n̵t̶.̵g̶e̷t̵E̶l̷e̸m̷e̵n̵t̷B̴y̸I̴d̴(̷"̶k̷o̶"̷)̵.̴i̶n̷n̶e̵r̵T̴e̸x̷t̷ ̷=̵ ̴"̴당̷신̶에̴ ̷대̶한̵ ̸기̶본̶적̵인̴ ̶것̷은̵ ̵알̸겠̵어̶요̶.̸ ̷그̷래̴도̵ ̷당̶신̴을̸ ̶조̴금̵만̶ ̵더̴ ̷알̵아̵보̶고̵ ̶싶̵군̷요̸.̵"̸)̷
+                                ̸ ̸ ̵ ̴ ̷ ̸ ̸ ̸ ̸ ̸ ̸ ̷ ̴ ̴ ̷ ̸ ̷ ̵ ̷ ̶ ̷ ̴ ̷ ̶ ̴.̷t̶h̴e̷n̵(̵(̴)̶ ̴=̵>̷ ̴d̷o̴c̶u̸m̶e̴n̶t̷.̷g̷e̷t̷E̵l̵e̶m̵e̸n̶t̸B̵y̸I̴d̶(̷"̸e̶n̴"̶)̴.̶i̶n̷n̶e̵r̴T̷e̵x̸t̴ ̷=̷ ̸"̵I̵ ̷u̸n̷d̶e̴r̵s̵t̵a̷n̴d̷ ̷t̴h̸e̷ ̷b̴a̶s̷i̵c̴s̴ ̷a̵b̶o̵u̶t̶ ̵y̵o̸u̵.̴ ̶B̶u̶t̸,̴ ̴l̷e̸t̵ ̵m̶e̶ ̴f̶i̷g̸u̶r̸e̵ ̵y̷o̷u̵ ̴o̵u̴t̵ ̸m̷o̸r̴e̸.̴"̷)̵
+                                ̴ ̷ ̵ ̴ ̶ ̴ ̴ ̵ ̶ ̷ ̶ ̵ ̸ ̸ ̷ ̴ ̶ ̸ ̴ ̶ ̸ ̸ ̸ ̶ ̵.̴t̶h̸e̴n̷(̶(̵)̶ ̸=̵>̶ ̸s̸e̴t̷T̸i̷m̷e̶o̶u̵t̴(̷f̶u̴n̶c̴t̶i̵o̶n̷(̶)̴ ̷{̸t̸e̴x̸t̸i̷n̶t̴e̶r̸v̸a̵l̶I̵D̴ ̷=̵ ̶s̶e̵t̴I̴n̵t̵e̶r̵v̶a̷l̶(̸t̴e̸x̸t̵F̶a̵d̴e̴I̶N̵,̶ ̶1̶0̷0̷)̴}̵)̴)̸
+                                ̴ ̷ ̶ ̸ ̸ ̶ ̸ ̸ ̴ ̸ ̶ ̷ ̸ ̵ ̸ ̸ ̷ ̸ ̶ ̷ ̶ ̵ ̴ ̸ ̶.̴t̴h̷e̷n̷(̶(̵)̶ ̵=̷>̶ ̶s̴l̷e̶e̷p̷(̵3̸0̴0̴0̷)̸
+                                ̷ ̴ ̵ ̸ ̵ ̸ ̸ ̶ ̴ ̸ ̷ ̵ ̶ ̸ ̵ ̴ ̸ ̵ ̵ ̴ ̵ ̶ ̷ ̸ ̷ ̷ ̵ ̴ ̷.̵t̴h̶e̸n̷(̴(̵)̵ ̶=̷>̶ ̴s̷e̴t̵T̴i̵m̴e̸o̵u̶t̸(̸f̶u̴n̸c̴t̶i̵o̵n̵(̸)̴ ̴{̸t̸e̷x̴t̴i̶n̵t̸e̵r̷v̴a̶l̵I̶D̵ ̶=̵ ̶s̵e̶t̷I̶n̴t̷e̸r̷v̸a̶l̶(̷t̵e̷x̷t̷F̸a̴d̴e̶O̶u̷t̴,̸ ̷1̷0̷0̶)̶}̸)̸)̸
+                                ̵ ̷ ̴ ̵ ̷ ̸ ̸ ̶ ̷ ̶ ̴ ̶ ̸ ̸ ̶ ̷ ̵ ̵ ̶ ̵ ̷ ̵ ̷ ̴ ̶ ̴ ̵ ̶ ̷.̶t̶h̵e̴n̴(̷(̶)̸ ̵=̴≯ ̵s̷l̸e̸e̸p̸(̸2̷0̷0̴0̴)̷
+                                ̶ ̵ ̷ ̶ ̶ ̸ ̸ ̴ ̸ ̴ ̶ ̷ ̵ ̶ ̶ ̶ ̵ ̷ ̵ ̴ ̸ ̸ ̷ ̶ ̶ ̷ ̷ ̶ ̴ ̵ ̷ ̵ ̷.̸t̴h̸e̷n̷(̸(̵)̷ ̵=̵≯ ̷d̸o̵c̵u̸m̷e̸n̸t̵.̶g̴e̸t̶E̵l̵e̵m̴e̴n̶t̵B̸y̸I̴d̴(̷"̷p̷r̸o̸g̷r̴e̶s̵s̴-̷b̸a̶r̷"̷)̴.̵s̷t̶y̶l̵e̸.̷v̸i̵s̵i̵b̴i̵l̸i̸t̴y̵ ̷≠'̵v̸i̶s̷i̷b̸l̶e̸'̶)̸
+                                ̶ ̷ ̸ ̵ ̶ ̸ ̷ ̶ ̴ ̷ ̶ ̶ ̴ ̶ ̴ ̵ ̶ ̵ ̶ ̵ ̸ ̷ ̵ ̷ ̶ ̷ ̸ ̸ ̴ ̶ ̷ ̵ ̷.̸t̵h̶e̸n̷(̴(̴)̵ ̷=̴>̶ ̶d̴o̷c̸u̸m̴e̵n̷t̶.̸g̵e̶t̵E̴l̶e̴m̵e̷n̶t̷B̸y̶I̷d̵(̵"̷a̸n̵s̷w̸e̷r̷"̸)̵.̵s̶t̷y̷l̴e̴.̸d̴i̷s̴p̵l̵a̸y̸ ̶≠ ̵'̶b̵l̶o̶c̷k̷'̸)̸
+                                ̴ ̵ ̶ ̴ ̵ ̶ ̸ ̸ ̵ ̷ ̵ ̴ ̷ ̸ ̶ ̵ ̷ ̶ ̵ ̴ ̷ ̸ ̷ ̴ ̶ ̶ ̵ ̸ ̵ ̴ ̸ ̴ ̴.̸t̶h̵e̶n̸(̷(̴)̵ ̶=̶>̵ ̸d̸o̷c̵u̴m̶e̷n̵t̷.̷g̷e̴t̸E̷l̴e̵m̵e̶n̴t̴B̴y̶I̶d̸(̷"̶k̷o̴"̵)̴.̷i̵n̴n̵e̷r̷T̷e̵x̴t̴ ̸=̷ ̶L̸v̶2̴_̴Q̷[̷r̷a̴n̶d̵o̴m̶N̴u̵m̴s̶[̴0̵]̷]̵[̶0̷]̵)̵
+                                ̸ ̷ ̴ ̶ ̷ ̶ ̶ ̷ ̸ ̶ ̵ ̸ ̶ ̵ ̸ ̶ ̸ ̸ ̵ ̷ ̷ ̴ ̷ ̴ ̸ ̷ ̸ ̶ ̸ ̵ ̷ ̴ ̴.̷t̴h̵e̵n̶(̴(̷)̷ ̸=̵>̷ ̷d̸o̸c̴u̵m̵e̶n̷t̷.̶g̷e̷t̸E̵l̵e̷m̴e̶n̴t̶B̷y̴I̸d̴(̷"̸e̷n̴"̸)̵.̸i̵n̸n̶e̵r̷T̶e̴x̴t̷ ̴=̶ ̷L̸v̷2̷_̶Q̸[̷r̶a̶n̷d̴o̸m̶N̴u̴m̴s̴[̴0̸]̴]̴[̸1̷]̸)̸
+                                ̸ ̸ ̶ ̸ ̵ ̵ ̵ ̸ ̵ ̶ ̴ ̵ ̷ ̶ ̵ ̵ ̴ ̶ ̵ ̶ ̸ ̸ ̸ ̴ ̶ ̵ ̶ ̷ ̸ ̷ ̵ ̷ ̵.̷t̵h̸e̷n̵(̵(̸)̵ ̷=̴≯ ̵s̵e̵t̷T̴i̶m̷e̵o̶u̸t̴(̷f̸u̷n̷c̵t̸i̶o̷n̵(̴)̵ ̵{̶t̷e̵x̶t̶i̴n̵t̵e̵r̸v̸a̸l̵I̵D̵ ̷=̷ ̶s̷e̵t̸I̷n̶t̷e̷r̶v̴a̷l̴(̴t̵e̴x̸t̶F̸a̸d̵e̵I̷N̵,̸ ̷1̷0̶0̷)̶;̸ ̶i̸n̶p̷u̴t̵i̶n̵t̶e̷r̷v̴a̵l̶I̵D̵ ̴=̶ ̴s̵e̷t̵I̸n̸t̵e̴r̵v̴a̷l̸(̴i̵n̵p̴u̴t̶F̵a̷d̸e̷I̶N̶,̴ ̷1̷0̴0̵)̷}̷)̵)̸
+                                ̶ ̷ ̵ ̵ ̷ ̸ ̴ ̶ ̶ ̸ ̸ ̷ ̸ ̵ ̵ ̸ ̶ ̸ ̶ ̵ ̸ ̴ ̶ ̷ ̴ ̷ ̸ ̶ ̸ ̴ ̴ ̴ ̶.̶t̷h̵e̴n̵(̶(̸)̵ ̸=̷>̷ ̴s̷l̸e̶e̴p̸(̵1̷0̸0̷0̸)̷
+                                ̵ ̷ ̶ ̵ ̸ ̸ ̶ ̷ ̷ ̵ ̵ ̶ ̸ ̶ ̴ ̵ ̵ ̷ ̸ ̸ ̷ ̵ ̶ ̸ ̸ ̵ ̶ ̶ ̵ ̸ ̵ ̶ ̶ ̶ ̷ ̴ ̸.̵t̸h̸e̶n̶(̴(̸)̸ ̴=̵>̴ ̸d̸o̷c̷u̷m̴e̶n̵t̶.̷g̶e̴t̶E̸l̴e̴m̵e̵n̷t̸B̶y̸I̸d̷(̸"̷c̴o̷n̷t̷i̷n̶u̸e̸"̷)̴.̷s̶t̷y̷l̴e̷.̴d̸i̸s̸p̷l̴a̷y̸ ̵=̵ ̴'̴b̷l̵o̵c̷k̷'̵)̵
+                                ̸ ̶ ̵ ̶ ̴ ̸ ̴ ̸ ̸ ̴ ̷ ̴ ̶ ̴ ̸ ̴ ̶ ̶ ̶ ̵ ̴ ̶ ̶ ̸ ̸ ̸ ̸ ̶ ̴ ̵ ̶ ̶ ̶)̸
+                                ̸ ̶ ̷ ̶ ̶ ̵ ̶ ̴ ̸ ̶ ̵ ̵ ̸ ̸ ̸ ̸ ̷ ̸ ̵ ̴ ̵ ̷ ̷ ̸ ̶ ̸ ̸ ̶ ̴)̴
+                                ̶ ̴ ̴ ̵ ̸ ̷ ̵ ̴ ̸ ̶ ̵ ̶ ̴ ̸ ̶ ̵ ̵ ̵ ̸ ̶ ̵ ̸ ̵ ̸ ̵)̶
+                                ̶ ̸ ̵ ̴ ̷ ̷ ̸ ̵ ̵ ̷ ̸ ̶ ̴ ̴ ̴ ̸ ̴}̵
+                                ̴ ̶ ̴ ̴ ̷ ̵ ̸ ̸ ̷ ̶ ̵ ̶ ̶ ̶ ̶ ̸ ̷i̶f̸ ̷(̵q̵u̴e̷s̵t̴i̸o̶n̸S̵e̸q̴ ̸=̶=̴ ̷6̷)̴ ̶{̴
+                                ̵ ̴ ̴ ̵ ̸ ̵ ̸ ̵ ̴ ̴ ̸ ̴ ̴ ̸ ̶ ̷ ̷ ̵ ̷ ̵ ̷i̶f̵ ̴(̴r̶a̴n̸d̶o̵m̷N̸u̷m̸s̷[̸0̴]̸ ̴=̶=̵ ̷0̸)̶ ̸{̴L̷v̷2̶_̵Q̸1̷(̴i̸n̶p̵u̶t̸)̵;̴}̷
+                                ̶ ̸ ̸ ̷ ̶ ̵ ̵ ̸ ̴ ̸ ̸ ̷ ̶ ̷ ̶ ̶ ̴ ̴ ̵ ̷ ̸i̸f̷ ̵(̶r̴a̷n̵d̶o̶m̸N̸u̷m̷s̶[̷0̵]̴ ̷=̶≠ ̷1̸)̶ ̶{̵L̶v̵2̴_̵Q̷2̵(̸i̸n̶p̶u̶t̴)̷;̶}̵
+                                ̸ ̶ ̸ ̷ ̷ ̵ ̵ ̷ ̶ ̸ ̴ ̵ ̴ ̴ ̷ ̴ ̵ ̵ ̵ ̷ ̸i̷f̷ ̴(̶r̷a̵n̶d̴o̵m̵N̶u̸m̸s̵[̵0̸]̵ ̵=̵=̷ ̷2̴)̴ ̶{̷L̷v̵2̵_̵Q̵3̶(̷i̴n̷p̸u̸t̵)̶;̶}̶
+                                ̶ ̴ ̶ ̴ ̶ ̴ ̴ ̶ ̶ ̷ ̸ ̴ ̶ ̸ ̶ ̴ ̶ ̸ ̷ ̵ ̴i̶f̷ ̸(̵r̴a̶n̴d̷o̶m̶N̷u̴m̵s̸[̶0̶]̵ ̶=̶=̶ ̴3̵)̶ ̴{̸L̴v̸2̵_̸Q̵4̸(̸i̷n̴p̶u̵t̴)̵;̴}̷
+                                ̵ ̷ ̶ ̵ ̸ ̸ ̶ ̵ ̶ ̶ ̸ ̸ ̸ ̵ ̴ ̵ ̵ ̴ ̴ ̴ ̴i̵f̴ ̴(̵r̸a̸n̵d̶o̵m̷N̷u̶m̸s̸[̸0̷]̸ ̶=̴=̴ ̸4̶)̷ ̷{̸L̴v̶2̵_̸Q̸5̷(̶i̸n̵p̶u̸t̶)̵;̵}̸
+                                ̶ ̴ ̷ ̸ ̴ ̸ ̶ ̷ ̴ ̶ ̸ ̸ ̷ ̴ ̵ ̶ ̷ ̴ ̵ ̶ ̵/̶/̸d̸o̴c̴u̶m̶e̶n̶t̷.̵g̵e̶t̸E̴l̴e̶m̵e̷n̸t̴B̴y̷I̶d̶(̶"̷a̷n̶s̴w̶e̸r̸"̸)̸.̶s̷t̴y̵l̵e̶.̴d̶i̴s̶p̸l̶a̶y̶ ̷=̵'̴b̷l̷o̶c̵k̸'̸;̸
+                                ̶ ̵ ̶ ̸ ̵ ̶ ̴ ̷ ̸ ̴ ̶ ̸ ̷ ̵ ̸ ̵ ̷ ̴ ̶ ̶ ̵d̷o̷c̴u̸m̷e̷n̴t̵.̷g̷e̸t̵E̵l̵e̸m̸e̷n̵t̶B̶y̶I̸d̶(̵"̸k̸o̷"̷)̴.̷i̴n̶n̶e̷r̵T̴e̷x̵t̷ ̸=̶ ̴L̸v̶2̴_̶Q̵[̸r̸a̶n̴d̵o̵m̷N̷u̴m̶s̷[̵1̶]̵]̸[̵0̸]̵;̴
+                                ̷ ̷ ̶ ̴ ̷ ̴ ̴ ̵ ̵ ̶ ̷ ̵ ̶ ̶ ̵ ̸ ̸ ̴ ̵ ̶ ̵d̸o̶c̸u̸m̵e̴n̴t̷.̸g̴e̴t̵E̵l̴e̴m̵e̸n̶t̸B̶y̸I̸d̸(̶"̶e̸n̶"̷)̸.̸i̸n̴n̶e̴r̸T̷e̶x̵t̸ ̶=̵ ̷L̵v̷2̵_̴Q̶[̴r̴a̴n̴d̵o̵m̸N̵u̴m̷s̷[̶1̴]̸]̵[̵1̸]̸;̵
+                                ̸ ̴ ̷ ̸ ̷ ̴ ̴ ̵ ̸ ̶ ̶ ̵ ̷ ̴ ̸ ̷ ̶ ̵ ̵ ̷ ̸/̵/̶i̴n̴t̴e̴r̶v̷a̸l̸I̷D̴ ̷=̴ ̶s̷e̵t̷I̷n̷t̴e̵r̵v̶a̵l̸(̴t̵e̷x̴t̵F̵a̸d̷e̶I̶N̸,̶ ̸2̵0̴0̸)̶;̸
+                                ̴ ̴ ̴ ̶ ̵ ̵ ̷ ̸ ̸ ̴ ̵ ̴ ̵ ̷ ̷ ̴ ̸}̶
+                                ̶ ̴ ̷ ̴ ̷ ̷ ̴ ̴ ̸ ̸ ̴ ̶ ̷ ̶ ̶ ̵ ̶i̵f̷ ̵(̶q̴u̴e̷s̷t̴i̷o̸n̷S̷e̸q̷ ̸=̴=̶ ̵7̵)̶ ̷{̵
+                                ̴ ̷ ̶ ̷ ̶ ̶ ̷ ̶ ̵ ̸ ̷ ̵ ̵ ̴ ̵ ̶ ̸ ̶ ̴ ̵ ̴i̴f̶ ̷(̶r̶a̶n̶d̸o̴m̵N̷u̸m̵s̵[̶1̵]̴ ̴=̴=̴ ̶0̷)̶ ̵{̷L̸v̶2̵_̵Q̸1̷(̷i̵n̸p̶u̸t̶)̸;̸}̵
+                                ̴ ̴ ̸ ̷ ̷ ̶ ̷ ̸ ̴ ̷ ̴ ̵ ̸ ̴ ̷ ̸ ̸ ̷ ̶ ̶ ̴i̵f̴ ̸(̶r̶a̵n̸d̴o̴m̷N̴u̶m̵s̸[̷1̷]̵ ̴=̷=̶ ̷1̴)̶ ̵{̶L̴v̴2̷_̴Q̴2̵(̵i̴n̵p̸u̴t̴)̸;̵}̶
+                                ̵ ̴ ̵ ̶ ̸ ̶ ̶ ̷ ̸ ̴ ̶ ̵ ̷ ̸ ̷ ̴ ̵ ̶ ̴ ̵ ̵i̶f̸ ̸(̵r̸a̸n̵d̸o̴m̶N̴u̴m̸s̴[̵1̸]̶ ̵=̶=̷ ̸2̷)̵ ̶{̵L̸v̶2̷_̸Q̶3̸(̵i̷n̵p̶u̴t̸)̷;̷}̴
+                                ̴ ̵ ̴ ̶ ̴ ̶ ̵ ̸ ̵ ̷ ̸ ̸ ̴ ̶ ̴ ̷ ̴ ̸ ̸ ̸ ̷i̶f̶ ̵(̷r̴a̸n̵d̶o̶m̷N̶u̵m̵s̷[̸1̴]̸ ̸=̷=̴ ̶3̶)̴ ̴{̸L̷v̴2̵_̸Q̷4̸(̸i̷n̸p̸u̷t̷)̵;̵}̴
+                                ̶ ̶ ̶ ̷ ̶ ̸ ̸ ̷ ̷ ̵ ̵ ̷ ̶ ̴ ̶ ̶ ̸ ̵ ̷ ̶ ̵i̵f̶ ̵(̵r̷a̸n̷d̶o̵m̶N̴u̸m̶s̶[̵1̴]̵ ̷=̶=̵ ̷4̴)̵ ̷{̴L̶v̸2̶_̸Q̶5̵(̷i̷n̶p̸u̶t̴)̵;̸}̵
+                                ̸ ̸ ̷ ̸ ̴ ̸ ̶ ̸ ̸ ̴ ̵ ̴ ̵ ̸ ̴ ̵ ̴ ̵ ̵ ̷ ̷d̵o̷c̵u̷m̵e̴n̶t̵.̴g̸e̴t̸E̴l̸e̷m̶e̸n̵t̴B̴y̷I̸d̵(̷"̶k̴o̷"̶)̷.̷i̵n̷n̷e̶r̶T̴e̷x̶t̸ ̴=̴ ̴L̷v̶2̷_̶Q̵[̴r̸a̵n̸d̶o̵m̷N̶u̸m̴s̵[̶2̴]̷]̴[̶0̶]̷;̸
+                                ̷ ̸ ̵ ̵ ̷ ̴ ̷ ̴ ̷ ̶ ̷ ̵ ̴ ̷ ̶ ̴ ̴ ̶ ̵ ̷ ̵d̴o̵c̸u̴m̴e̷n̸t̸.̴g̶e̵t̴E̷l̷e̶m̶e̸n̷t̷B̸y̵I̶d̸(̸"̶e̸n̸"̴)̴.̵i̷n̵n̶e̸r̴T̶e̷x̶t̶ ̸=̶ ̵L̶v̸2̵_̶Q̶[̷r̷a̶n̴d̶o̶m̵N̴u̴m̵s̶[̶2̸]̸]̷[̸1̵]̸;̷
+                                ̵ ̶ ̷ ̷ ̷ ̸ ̶ ̸ ̶ ̶ ̷ ̷ ̵ ̶ ̵ ̷ ̴}̷
+                                ̵ ̴ ̴ ̷ ̸ ̶ ̵ ̵ ̸ ̶ ̶ ̵ ̸ ̷ ̴ ̸ ̶i̷f̸ ̶(̵q̵u̵e̴s̴t̵i̴o̶n̴S̵e̶q̶ ̵=̵=̵ ̶8̸)̷ ̴{̴
+                                ̸ ̷ ̴ ̴ ̴ ̵ ̴ ̸ ̶ ̶ ̴ ̴ ̵ ̷ ̸ ̴ ̵ ̷ ̷ ̵ ̸i̴f̷ ̸(̷r̷a̶n̴d̸o̴m̸N̵u̶m̵s̶[̵2̶]̷ ̷=̷≠ ̸0̸)̸ ̴{̷L̷v̷2̷_̶Q̶1̷(̴i̸n̸p̸u̴t̴)̸;̵}̵
+                                ̶ ̶ ̴ ̵ ̴ ̴ ̷ ̸ ̶ ̸ ̶ ̸ ̴ ̵ ̴ ̸ ̶ ̸ ̵ ̶ ̸i̵f̴ ̴(̵r̴a̵n̸d̶o̷m̸N̷u̸m̵s̷[̴2̶]̴ ̸=̶=̷ ̸1̶)̵ ̴{̷L̵v̷2̵_̴Q̶2̸(̷i̵n̸p̸u̷t̸)̴;̵}̸
+                                ̴ ̶ ̶ ̸ ̶ ̶ ̶ ̶ ̵ ̶ ̷ ̸ ̴ ̶ ̸ ̴ ̵ ̶ ̷ ̴ ̶i̷f̶ ̸(̵r̶a̶n̸d̷o̸m̷N̸u̶m̵s̴[̷2̷]̷ ̵=̵=̴ ̵2̵)̵ ̷{̸L̷v̵2̵_̶Q̶3̷(̶i̸n̵p̴u̵t̶)̵;̷}̸
+                                ̷ ̶ ̶ ̸ ̵ ̵ ̵ ̴ ̴ ̸ ̶ ̴ ̵ ̷ ̴ ̵ ̵ ̴ ̴ ̷ ̵i̷f̶ ̴(̸r̶a̸n̵d̸o̶m̶N̵u̵m̵s̶[̷2̴]̴ ̶=̴=̴ ̴3̶)̷ ̵{̸L̵v̵2̷_̶Q̷4̶(̸i̵n̸p̷u̸t̴)̷;̵}̶
+                                ̷ ̵ ̸ ̶ ̷ ̸ ̴ ̸ ̴ ̷ ̴ ̴ ̴ ̷ ̸ ̸ ̷ ̵ ̴ ̸ ̴i̶f̵ ̷(̶r̴a̴n̴d̵o̸m̵N̸u̸m̸s̸[̷2̷]̴ ̶=̷=̷ ̴4̴)̶ ̸{̴L̶v̴2̶_̸Q̸5̴(̴i̵n̴p̶u̷t̵)̴;̸}̶
+                                ̴ ̸ ̶ ̵ ̷ ̴ ̴ ̴ ̶ ̶ ̶ ̶ ̵ ̴ ̷ ̸ ̴ ̴ ̵ ̷ ̷d̷o̴c̵u̶m̸e̵n̴t̸.̵g̷e̴t̴E̷l̵e̸m̴e̸n̴t̴B̸y̴I̴d̵(̶"̷p̸r̴o̵g̷r̵e̵s̵s̵-̴b̴a̵r̴"̷)̶.̵s̵t̸y̷l̸e̷.̸v̷i̵s̴i̷b̸i̶l̸i̴t̷y̷ ̸=̷'̴h̴i̴d̷d̴e̵n̵'̴;̶
+                                ̶ ̷ ̶ ̶ ̵ ̶ ̸ ̷ ̴ ̴ ̴ ̴ ̵ ̵ ̸ ̶ ̷ ̶ ̷ ̷ ̸d̴o̵c̷u̵m̴e̷n̵t̷.̶g̸e̴t̵E̷l̵e̵m̶e̵n̴t̶B̷y̷I̸d̴(̴"̵c̸o̶n̷t̷i̵n̷u̴e̴"̷)̷.̷s̴t̶y̴l̴e̴.̷d̶i̶s̵p̵l̵a̷y̶ ̷≠'̵n̶o̸n̸e̵'̷;̴
+                                ̶ ̴ ̴ ̵ ̸ ̶ ̷ ̷ ̴ ̸ ̴ ̴ ̴ ̸ ̸ ̶ ̶ ̵ ̸ ̸ ̶s̸e̷t̸T̸i̴m̸e̸o̶u̵t̶(̸f̷u̵n̵c̶t̴i̴o̶n̵(̶)̸ ̶{̸t̸e̷x̵t̵i̴n̴t̷e̶r̷v̶a̷l̴I̸D̵ ̵=̷ ̶s̷e̵t̴I̶n̸t̴e̴r̶v̶a̴l̸(̷t̴e̴x̶t̴F̵a̵d̴e̷O̵u̷t̷,̷ ̶1̶0̵0̴)̵;̵ ̸i̶n̸p̸u̴t̸i̸n̴t̸e̷r̷v̵a̸l̴I̴D̶ ̵=̴ ̵s̸e̴t̵I̶n̶t̵e̸r̵v̶a̶l̸(̴i̴n̸p̷u̸t̷F̵a̶d̶e̵O̶u̸t̶,̵ ̷1̶0̷0̸)̴;̷}̵)̵;̵
+                                ̶ ̶ ̶ ̴ ̷ ̵ ̴ ̴ ̸ ̷ ̴ ̴ ̶ ̴ ̵ ̴ ̸ ̵ ̴ ̸ ̵c̴i̷r̴c̷l̵e̵.̶s̷e̸t̷R̷a̶d̶i̴u̴s̵(̸1̶1̶0̷)̷;̸
+                                ̸ ̵ ̴ ̶ ̸ ̸ ̶ ̵ ̶ ̶ ̴ ̷ ̴ ̸ ̸ ̸ ̴ ̵ ̷ ̶ ̴c̸i̴r̶c̶l̶e̸.̶s̸e̷t̶C̸o̴l̴o̸r̴A̵(̴[̴0̵.̵0̷3̸,̸ ̸0̴.̵0̷0̸,̶ ̶0̷.̷4̶7̴]̶)̸;̷
+                                ̶ ̴ ̷ ̷ ̷ ̶ ̵ ̵ ̶ ̵ ̷ ̶ ̵ ̶ ̴ ̴ ̴ ̸ ̷ ̸ ̸c̸i̴r̴c̴l̶e̷.̵s̵e̶t̸C̵o̶l̴o̴r̶B̸(̵[̴0̵.̴5̸2̷,̷ ̴0̴.̴9̷3̷,̷ ̸0̴.̵9̸5̴]̷)̷;̵
+                                ̴ ̷ ̵ ̸ ̴ ̶ ̵ ̶ ̸ ̸ ̶ ̵ ̴ ̶ ̶ ̵ ̴ ̶ ̴ ̴ ̸s̴l̷e̸e̵p̵(̶2̵0̴0̷0̸)̴
+                                ̷ ̷ ̶ ̵ ̸ ̶ ̶ ̵ ̶ ̸ ̴ ̵ ̸ ̶ ̴ ̷ ̴ ̵ ̶ ̷ ̵ ̶ ̵ ̵ ̴.̴t̷h̸e̷n̸(̴(̴)̶ ̶=̶>̵ ̴d̸o̶c̵u̵m̷e̵n̷t̴.̴g̶e̷t̸E̴l̶e̸m̶e̷n̴t̸B̸y̴I̴d̵(̶"̶a̵n̸s̴w̵e̷r̷"̷)̶.̸s̶t̷y̴l̸e̸.̷d̴i̶s̶p̶l̷a̶y̷ ̶=̵'̶n̶o̸n̷e̸'̴)̷
+                                ̵ ̶ ̶ ̶ ̸ ̶ ̶ ̴ ̶ ̸ ̶ ̶ ̶ ̴ ̴ ̵ ̸ ̸ ̴ ̴ ̵ ̵ ̶ ̴ ̷.̷t̴h̴e̸n̷(̵(̴)̴ ̷=̵>̵ ̵d̶o̸c̷u̶m̷e̶n̴t̶.̷g̶e̶t̸E̸l̶e̶m̷e̴n̴t̷B̶y̷I̴d̵(̵"̶k̷o̵"̶)̵.̶i̵n̸n̵e̸r̸T̵e̶x̷t̶ ̴=̵ ̶"̷당̸신̸,̴ ̸흥̴미̷롭̶군̴요̵.̶ ̴마̵지̸막̵으̷로̶ ̴조̶금̵만̶ ̵더̷ ̸물̷어̶보̸겠̵습̸니̸다̸.̸"̸)̶
+                                ̶ ̷ ̶ ̸ ̴ ̷ ̴ ̶ ̷ ̸ ̶ ̷ ̸ ̸ ̴ ̷ ̶ ̷ ̶ ̸ ̴ ̷ ̶ ̶ ̴.̷t̶h̵e̶n̷(̶(̶)̸ ̵=̶>̵ ̷d̶o̷c̸u̶m̸e̵n̶t̶.̵g̵e̸t̴E̶l̸e̵m̵e̵n̷t̷B̶y̵I̵d̵(̴"̶e̷n̴"̸)̵.̵i̶n̵n̷e̷r̶T̵e̶x̷t̵ ̴=̵ ̵"̶H̵o̷w̸ ̶i̵n̴t̴e̴r̶e̵s̷t̸i̵n̸g̴ ̷y̶o̷u̸ ̸a̵r̶e̴!̴ ̶I̶ ̵w̷a̴n̷t̸ ̴t̵o̷ ̵l̶e̶a̶r̵n̸ ̸m̵o̷r̸e̵ ̷a̴b̵o̴u̷t̵ ̴y̸o̵u̸.̸"̷)̷
+                                ̵ ̵ ̴ ̵ ̴ ̷ ̷ ̵ ̵ ̸ ̸ ̵ ̷ ̴ ̸ ̷ ̷ ̵ ̸ ̸ ̸ ̷ ̴ ̴ ̷.̷t̶h̶e̵n̸(̷(̸)̶ ̵=̶>̴ ̵s̸e̴t̶T̴i̸m̸e̴o̵u̴t̴(̴f̶u̵n̸c̷t̵i̶o̷n̴(̷)̶ ̷{̸t̴e̶x̵t̵i̷n̸t̸e̷r̷v̸a̷l̴I̸D̵ ̸=̷ ̸s̸e̷t̵I̷n̷t̷e̷r̴v̶a̵l̵(̸t̴e̵x̷t̶F̸a̶d̸e̵I̸N̵,̸ ̷1̴0̴0̸)̸}̷)̷)̸
+                                ̷ ̶ ̵ ̶ ̵ ̷ ̷ ̷ ̴ ̷ ̶ ̷ ̴ ̷ ̴ ̶ ̵ ̶ ̷ ̴ ̸ ̵ ̶ ̵ ̵.̵t̸h̴e̵n̷(̶(̵)̴ ̷=̷>̶ ̷s̶l̷e̶e̷p̸(̶3̶0̵0̷0̸)̷
+                                ̵ ̷ ̷ ̸ ̵ ̷ ̸ ̸ ̶ ̷ ̷ ̸ ̵ ̷ ̴ ̵ ̷ ̶ ̴ ̵ ̵ ̶ ̷ ̶ ̶ ̶ ̸ ̶ ̷.̶t̴h̷e̷n̷(̵(̷)̶ ̸=̴>̶ ̷s̸e̶t̶T̴i̸m̸e̵o̴u̶t̴(̴f̵u̵n̵c̷t̷i̷o̴n̸(̷)̶ ̴{̶t̴e̴x̶t̴i̵n̸t̸e̸r̸v̷a̵l̵I̵D̵ ̷≠ ̶s̴e̸t̶I̶n̴t̶e̶r̶v̴a̵l̶(̵t̵e̶x̷t̶F̸a̵d̴e̵O̷u̷t̶,̴ ̵1̴0̸0̵)̸}̷)̶)̵
+                                ̴ ̴ ̸ ̸ ̵ ̷ ̶ ̵ ̷ ̸ ̸ ̷ ̷ ̵ ̷ ̶ ̴ ̸ ̷ ̶ ̷ ̷ ̶ ̵ ̶ ̸ ̶ ̶ ̷.̶t̵h̵e̸n̷(̴(̵)̶ ̵=̷>̶ ̴s̵l̷e̴e̸p̴(̷2̴0̴0̵0̷)̴
+                                ̴ ̴ ̵ ̷ ̸ ̸ ̴ ̷ ̶ ̶ ̶ ̴ ̵ ̵ ̷ ̵ ̵ ̷ ̵ ̵ ̶ ̸ ̴ ̸ ̷ ̵ ̷ ̸ ̷ ̴ ̸ ̶ ̵.̴t̸h̸e̸n̴(̵(̷)̸ ̴=̵>̴ ̵d̵o̶c̷u̴m̸e̷n̸t̴.̸g̵e̸t̵E̸l̷e̷m̶e̴n̴t̷B̸y̸I̶d̴(̷"̵p̴r̴o̶g̴r̸e̶s̵s̸-̴b̴a̶r̶"̴)̸.̷s̸t̸y̵l̶e̵.̶v̸i̶s̸i̴b̶i̸l̸i̶t̸y̵ ̴=̶'̶v̸i̵s̸i̶b̷l̸e̴'̵)̷
+                                ̵ ̸ ̸ ̶ ̵ ̶ ̸ ̵ ̷ ̸ ̷ ̸ ̴ ̷ ̷ ̶ ̵ ̸ ̶ ̸ ̵ ̶ ̸ ̴ ̸ ̴ ̵ ̷ ̶ ̶ ̶ ̷ ̷.̶t̸h̶e̷n̸(̷(̴)̸ ̴=̴>̶ ̴d̵o̴c̶u̶m̷e̷n̸t̶.̴g̷e̷t̷E̸l̵e̵m̵e̵n̶t̵B̵y̶I̷d̵(̴"̸a̷n̴s̶w̴e̶r̷"̵)̷.̶s̶t̴y̴l̷e̵.̵d̶i̷s̴p̶l̵a̷y̴ ̷≠ ̶'̸b̴l̶o̴c̸k̴'̸)̷
+                                ̶ ̴ ̶ ̷ ̸ ̵ ̶ ̴ ̴ ̸ ̵ ̵ ̸ ̶ ̸ ̸ ̷ ̷ ̵ ̷ ̷ ̵ ̴ ̵ ̵ ̷ ̷ ̵ ̵ ̷ ̸ ̵ ̵.̵t̶h̵e̵n̵(̸(̵)̵ ̶≠≯ ̵d̶o̷c̶u̸m̷e̴n̶t̷.̵g̵e̷t̵E̵l̸e̸m̸e̴n̷t̴B̶y̴I̷d̶(̸"̶k̴o̸"̸)̶.̶i̴n̴n̶e̴r̷T̶e̶x̸t̷ ̷=̶ ̵"̶당̴신̶이̷ ̵생̸각̶하̵는̴ ̶당̴신̶은̴ ̸어̷떤̵ ̴사̴람̵입̵니̸까̵?̸"̴)̴
+                                ̴ ̶ ̵ ̵ ̷ ̴ ̶ ̷ ̶ ̸ ̸ ̷ ̴ ̵ ̵ ̸ ̶ ̵ ̸ ̵ ̶ ̶ ̷ ̸ ̶ ̸ ̷ ̷ ̷ ̸ ̴ ̵ ̶.̶t̵h̴e̸n̷(̸(̶)̷ ̵=̷>̴ ̴d̵o̷c̴u̶m̷e̴n̷t̶.̷g̴e̷t̵E̷l̸e̵m̶e̵n̶t̷B̵y̴I̶d̴(̸"̶e̵n̸"̵)̶.̵i̶n̴n̷e̵r̵T̶e̷x̴t̸ ̶=̷ ̸"̶W̴h̴a̷t̷ ̵k̸i̷n̵d̸ ̴o̸f̵ ̵p̸e̴r̶s̷o̸n̴ ̷d̸o̵ ̵y̴o̶u̸ ̸t̷h̴i̷n̷k̶ ̶y̸o̷u̷ ̷a̸r̷e̸?̴"̸)̴
+                                ̵ ̸ ̵ ̴ ̶ ̸ ̴ ̸ ̶ ̵ ̷ ̷ ̶ ̷ ̵ ̴ ̶ ̸ ̷ ̸ ̴ ̸ ̸ ̶ ̶ ̵ ̵ ̶ ̵ ̴ ̸ ̸ ̸.̶t̷h̸e̴n̷(̴(̶)̵ ̸≠>̴ ̸s̴e̷t̷T̷i̷m̴e̶o̴u̷t̶(̸f̶u̴n̴c̶t̷i̴o̶n̸(̸)̶ ̶{̶t̶e̸x̸t̵i̸n̴t̸e̸r̵v̶a̶l̶I̶D̵ ̴=̷ ̴s̸e̸t̷I̴n̴t̴e̸r̴v̸a̸l̸(̸t̸e̴x̴t̵F̷a̸d̶e̸I̶N̴,̸ ̵1̵0̷0̶)̸;̷ ̷i̸n̵p̷u̵t̵i̷n̶t̶e̶r̶v̷a̴l̶I̶D̶ ̶≠ ̵s̸e̵t̸I̷n̶t̸e̵r̸v̸a̷l̴(̸i̵n̷p̷u̴t̵F̷a̵d̸e̸I̴N̴,̷ ̷1̸0̵0̸)̷}̶)̵)̸
+                                ̷ ̴ ̴ ̵ ̶ ̴ ̸ ̴ ̶ ̷ ̴ ̷ ̵ ̵ ̵ ̵ ̷ ̵ ̶ ̴ ̸ ̶ ̵ ̴ ̶ ̶ ̸ ̸ ̸ ̸ ̵ ̵ ̵.̶t̵h̴e̴n̷(̴(̸)̵ ̸=̷>̴ ̵s̸l̴e̵e̸p̴(̵1̴0̶0̶0̸)̴
+                                ̴ ̷ ̷ ̶ ̴ ̶ ̷ ̵ ̸ ̸ ̷ ̸ ̸ ̴ ̷ ̵ ̵ ̷ ̷ ̴ ̴ ̸ ̴ ̴ ̷ ̶ ̴ ̶ ̶ ̵ ̶ ̵ ̶ ̶ ̷ ̷ ̷.̵t̷h̷e̸n̴(̵(̷)̸ ̸=̴>̷ ̵d̸o̷c̷u̷m̵e̷n̸t̷.̶g̶e̶t̴E̸l̶e̸m̵e̸n̷t̸B̶y̴I̷d̴(̷"̶c̶o̷n̴t̶i̶n̶u̵e̴"̸)̴.̶s̸t̸y̸l̵e̸.̶d̴i̵s̵p̷l̸a̴y̴ ̴=̵ ̴'̴b̷l̵o̶c̶k̷'̷)̵
+                                ̵ ̸ ̷ ̷ ̷ ̸ ̴ ̷ ̷ ̷ ̷ ̵ ̵ ̷ ̷ ̶ ̸ ̷ ̴ ̸ ̸ ̶ ̷ ̴ ̵ ̴ ̴ ̴ ̷ ̷ ̸ ̵ ̵)̶
+                                ̶ ̵ ̷ ̵ ̴ ̷ ̸ ̸ ̸ ̷ ̶ ̵ ̴ ̸ ̸ ̶ ̵ ̸ ̴ ̴ ̶ ̸ ̶ ̴ ̷ ̵ ̵ ̶ ̸)̸
+                                ̴ ̸ ̵ ̸ ̴ ̴ ̴ ̶ ̵ ̵ ̶ ̷ ̸ ̵ ̸ ̴ ̴ ̵ ̵ ̴ ̷ ̶ ̸ ̴ ̸)̶
+                                ̷ ̶ ̸ ̸ ̵ ̷ ̵ ̸ ̶ ̸ ̸ ̴ ̴ ̶ ̸ ̷ ̵}̷
+                                ̶ ̵ ̸ ̵ ̵ ̷ ̴ ̷ ̶ ̶ ̴ ̸ ̶ ̴ ̴ ̵ ̸i̵f̶ ̶(̷q̴u̶e̶s̷t̶i̸o̷n̵S̶e̶q̴ ̵≠=̷ ̵9̷)̵ ̴{̸L̷v̴3̴_̵Q̴1̴(̸i̴n̶p̶u̷t̵)̷;̸}̶
+                                ̸ ̷ ̵ ̶ ̷ ̵ ̸ ̴ ̸ ̵ ̶ ̸ ̷ ̴ ̷ ̶ ̷i̴f̸ ̴(̸q̵u̴e̸s̴t̷i̷o̴n̶S̷e̵q̵ ̶=̶=̴ ̸1̵0̷)̵ ̶{̷L̷v̶3̵_̵Q̶2̷(̷i̴n̶p̸u̵t̸)̴;̷}̸
+                                ̴ ̸ ̴ ̵ ̷ ̷ ̴ ̸ ̸ ̷ ̸ ̶ ̶ ̷ ̴ ̴ ̸i̷f̶ ̵(̴q̶u̴e̷s̷t̶i̵o̴n̵S̷e̴q̴ ̸=̴=̴ ̴1̷1̴)̵ ̵{̷L̷v̶3̸_̶Q̴3̸(̸i̵n̵p̵u̴t̸)̴;̷}̶
+                                ̴ ̸ ̶ ̴ ̷ ̵ ̵ ̶ ̸ ̴ ̷ ̵ ̴ ̵ ̵ ̵ ̶i̷f̷ ̶(̵q̸u̸e̴s̶t̷i̴o̴n̴S̴e̸q̷ ̵≠=̴ ̴1̴2̶)̴ ̶{̶
+                                ̷ ̷ ̶ ̸ ̷ ̶ ̶ ̴ ̵ ̷ ̶ ̸ ̵ ̵ ̶ ̶ ̷ ̶ ̷ ̶ ̵L̷v̵3̵_̴Q̷4̴(̷i̷n̵p̷u̴t̴)̸;̶
+                                */
                         const code = document.getElementById("transition");
                         let i = 0;
                         function typing(){
@@ -1241,10 +1369,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                     function transitionVideo() {
                         document.getElementById("transition").style.display ='none';
-                        document.getElementById("progress-bar").style.display ='none';
-                        document.getElementById("the_circle_canvas").style.display ='none';
-                        document.getElementById("output").style.display ='none';
-                        document.getElementById("continue").style.display ='none';
                         document.getElementById('transitionVideo').style.display = 'block';
                         document.getElementById('transitionVideo').style.height = String(window.innerHeight)+"px";
                         document.getElementById('transitionVideo').play();
@@ -1260,9 +1384,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
                         .then(() => sleep(3000)
                             .then(() => toTransition())
-                            .then(() => sleep(5000)
+                            .then(() => sleep(7000)
                                 .then(() => transitionVideo())
-                                .then(() => sleep(7000)
+                                .then(() => sleep(17000)
                                     .then(() => circle.setColorA([0.00, 0.00, 0.71]))
                                     .then(() => circle.setColorB([0.00, 1.00, 1.00]))
                                     .then(() => fromTransition())
