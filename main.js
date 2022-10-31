@@ -1,5 +1,31 @@
+document.body.style.backgroundColor = "black";
+
 document.addEventListener("DOMContentLoaded", () => {
 
+    /* progress bar */
+    // progress start
+    const circle1 = document.getElementById("step-1");
+    const circle2 = document.getElementById("step-2");
+    const circle3 = document.getElementById("step-3");
+    let step1procress = new CircleProgress(circle1);
+    const step2procress = new CircleProgress(circle2);
+    const step3procress = new CircleProgress(circle3);
+    step1procress.max = 100;
+    step1procress.value = 0;
+    step2procress.max = 100;
+    step2procress.value = 0;
+    step3procress.max = 100;
+    step3procress.value = 0;
+    // progress end
+    function fnStep1() {
+        step1procress.value += 20;
+    }
+    function fnStep2() {
+        step2procress.value += 34;
+    }
+    function fnStep3() {
+        step3procress.value += 25;
+    }
 
     /* circle */
     const fragment = /* glsl */ `#version 300 es
@@ -107,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
             this.resize();
             this.setCenter(0.5, 0.7);
-            this.setRadius(100);
+            this.setRadius(33);
             this.setDisplacement(-5);
             this.setBreathTempo(1);
             this.setOrbitRadius(20);
@@ -876,7 +902,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv3_Q2(input) {
         // progress bar
         fnStep3();
-        // ***** input 값을 영어로 번역한 후, aifunction.py 파일의 hexcode() 함수의 인자로 전달해야 합니다. *****
+        // ******** input 값을 영어로 번역한 후, aifunction.py 파일의 hexcode() 함수의 인자로 전달해야 합니다. ********
         document.getElementById("ko").innerText = "내가 당신을 몇 퍼센트 이해할 수 있다고 생각합니까?";  // questionSeq = 9
         document.getElementById("en").innerText = "How much do you think I can understand you?";
     }
@@ -1101,8 +1127,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 if (questionSeq == 5) {
                     Lv1_Q5(input);
+                    document.getElementById("progress-bar").style.visibility ='hidden';
                     document.getElementById("continue").style.display ='none';
                     setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
+                    // circle radius, color change
+                    circle.setRadius(70);
+                    circle.setColorA([0.26, 0.07, 0.25]);
+                    circle.setColorB([0.77, 0.66, 0.34]);
                     sleep(2000)
                         .then(() => document.getElementById("answer").style.display ='none')
                         .then(() => document.getElementById("ko").innerText = "당신에 대한 기본적인 것은 알겠어요. 그래도 당신을 조금 더 알려주세요.")
@@ -1111,6 +1142,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         .then(() => sleep(3000)
                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
                             .then(() => sleep(2000)
+                                .then(() => document.getElementById("progress-bar").style.visibility ='visible')
                                 .then(() => document.getElementById("answer").style.display = 'block')
                                 .then(() => document.getElementById("ko").innerText = Lv2_Q[randomNums[0]][0])
                                 .then(() => document.getElementById("en").innerText = Lv2_Q[randomNums[0]][1])
@@ -1148,8 +1180,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (randomNums[2] == 2) {Lv2_Q3(input);}
                     if (randomNums[2] == 3) {Lv2_Q4(input);}
                     if (randomNums[2] == 4) {Lv2_Q5(input);}
+                    document.getElementById("progress-bar").style.visibility ='hidden';
                     document.getElementById("continue").style.display ='none';
                     setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
+                    circle.setRadius(110);
+                    circle.setColorA([0.03, 0.00, 0.47]);
+                    circle.setColorB([0.52, 0.93, 0.95]);
                     sleep(2000)
                         .then(() => document.getElementById("answer").style.display ='none')
                         .then(() => document.getElementById("ko").innerText = "알겠습니다. 마지막으로 조금만 더 물어보겠습니다.")
@@ -1158,6 +1194,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         .then(() => sleep(3000)
                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
                             .then(() => sleep(2000)
+                                .then(() => document.getElementById("progress-bar").style.visibility ='visible')
                                 .then(() => document.getElementById("answer").style.display = 'block')
                                 .then(() => document.getElementById("ko").innerText = "당신이 생각하는 당신은 어떤 사람입니까?")
                                 .then(() => document.getElementById("en").innerText = "What kind of person do you think you are?")
@@ -1179,6 +1216,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         document.getElementById("the_circle_canvas").style.display ='none';
                         document.getElementById("output").style.display ='none';
                         document.getElementById("continue").style.display ='none';
+                        // ******** python 파일 내 hexcode() 함수의 return 값을 받아 document.body.style.backgroundColor 값을 변경해야 합니다. ********
                         document.body.style.backgroundColor = '#0000CD'; 
 
                         const content = "P̵̻̦̻͆r̴̜̗̈́̊͠e̸͎̦̪͐̀͒s̴̻̍̀͗s̶̨̡̉̈́ ̷̢͗̄̒Ę̶̄̓Ṋ̶͚̙̎̚͝T̴̫͊͋E̶͙̣̔̋̕ͅR̴͍̓̒̃͜ ̸͎̥̲̀͐̋i̶̡̗̓̾f̸̥̠̯̃͂̚ ̸̠̈́͗͘ÿ̸͇́͜ö̴̼̣́ͅṳ̷̪̽ ̸͖͇̭̂ẅ̸͓̗͉́a̴̟̰̮͐͆̉ṋ̶̠̗̍t̸̮̫̦̆̆̽ ̴͚̭͓͐͆t̷̻̳͐o̸̠̙̚ ̶̢͎̓̎͗t̶̩̱͛͑a̷͕̋̕ḷ̷̈͆͝ͅk̵̯͇͂̽͝ ̶̭̚ẘ̶͔̇̌ȋ̶̗͂͘t̴͕̭͈͘͘ḣ̴̝̥̏̕ ̷̪̟͊͝͝m̸͓̥̾̒e̸͕̩̊̎̈.̴̩́";  
@@ -1195,8 +1233,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                     function fromTransition() {
                         document.getElementById("transition").style.display ='none';
-                        document.getElementById('transitionVideo').style.display = 'none';
                         document.getElementById("progress-bar").style.display ='block';
+                        document.getElementById("progress-bar").style.visibility ='hidden';
                         document.getElementById("the_circle_canvas").style.display ='block';
                         document.getElementById("output").style.display ='block';
                         document.body.style.backgroundColor = '#000000';
@@ -1212,6 +1250,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         document.getElementById('transitionVideo').play();
                     }
                     let [outputKo, outputEn] = output();
+                    document.getElementById("progress-bar").style.visibility ='hidden';
                     document.getElementById("continue").style.display ='none';
                     setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
                     sleep(2000)
@@ -1224,6 +1263,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             .then(() => sleep(5000)
                                 .then(() => transitionVideo())
                                 .then(() => sleep(7000)
+                                    .then(() => circle.setColorA([0.00, 0.00, 0.71]))
+                                    .then(() => circle.setColorB([0.00, 1.00, 1.00]))
                                     .then(() => fromTransition())
                                     .then(() => document.getElementById("ko").innerText = "오늘 우리가 나눈 이야기들로 나는 당신을 완전히 이해했어요.")
                                     .then(() => document.getElementById("en").innerText = "Through the stories we shared today, I completely understand you.")
@@ -1258,8 +1299,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
                     sleep(2000)
                         .then(() => document.getElementById("answer").style.display ='none')
-                        .then(() => document.getElementById("ko").innerText = "당신과 만날 수 있어서 기뻤습니다. 이제 뒤로 돌아나가서, 당신의 자아에 대한 영수증을 받아가세요.\n안녕히 가세요!")
-                        .then(() => document.getElementById("en").innerText = "It was an absolute pleasure speaking with you today. Now, turn around and get a receipt for your ego.\nGood bye!")
+                        .then(() => document.getElementById("ko").innerText = "당신과 만날 수 있어서 기뻤습니다. 이제 뒤로 돌아나가서, 당신의 자아에 대한 영수증을 받아가세요. 안녕히 가세요!")
+                        .then(() => document.getElementById("en").innerText = "It was an absolute pleasure speaking with you today. Now, turn around and get a receipt for your ego. Good bye!")
                         .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100); inputintervalID = setInterval(inputFadeIN, 100)}))
                         .then(() => sleep(3000)
                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
@@ -1273,29 +1314,3 @@ document.addEventListener("DOMContentLoaded", () => {
         }       
     });
 });
-
-
-/* progress bar */
-// progress start
-const circle1 = document.getElementById("step-1");
-const circle2 = document.getElementById("step-2");
-const circle3 = document.getElementById("step-3");
-let step1procress = new CircleProgress(circle1);
-const step2procress = new CircleProgress(circle2);
-const step3procress = new CircleProgress(circle3);
-step1procress.max = 100;
-step1procress.value = 0;
-step2procress.max = 100;
-step2procress.value = 0;
-step3procress.max = 100;
-step3procress.value = 0;
-// progress end
-function fnStep1() {
-  step1procress.value += 20;
-}
-function fnStep2() {
-  step2procress.value += 34;
-}
-function fnStep3() {
-  step3procress.value += 25;
-}
