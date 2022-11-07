@@ -9,7 +9,7 @@ const fs = require('fs');
 
 /* OpenAI GPT-3 API apiKey 변경 필요 */
 const configuration = new Configuration({
-    apiKey: "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",
+    apiKey: "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",
 });
 const openai = new OpenAIApi(configuration);
 
@@ -31,6 +31,188 @@ app.post('/data', (req, res) => {
         const parseData = readFile.length > 1 ? JSON.parse(readFile) : [];
         parseData.push(data);
         fs.writeFileSync(__dirname + '/data.json', JSON.stringify(parseData));
+        res.send('success');
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post('/age', (req, res) => {
+    try {
+        const data = req.body.data;
+        const readFile = fs.readFileSync(__dirname + '/age.json').toString();
+        const parseData = readFile.length > 1 ? JSON.parse(readFile) : [];
+        parseData.push(data);
+        fs.writeFileSync(__dirname + '/age.json', JSON.stringify(parseData));
+        res.send('success');
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post('/home', (req, res) => {
+    try {
+        const data = req.body.data;
+        const readFile = fs.readFileSync(__dirname + '/home.json').toString();
+        const parseData = readFile.length > 1 ? JSON.parse(readFile) : [];
+        parseData.push(data);
+        fs.writeFileSync(__dirname + '/home.json', JSON.stringify(parseData));
+        res.send('success');
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post('/degree', (req, res) => {
+    try {
+        const data = req.body.data;
+        const readFile = fs.readFileSync(__dirname + '/degree.json').toString();
+        const parseData = readFile.length > 1 ? JSON.parse(readFile) : [];
+        parseData.push(data);
+        fs.writeFileSync(__dirname + '/degree.json', JSON.stringify(parseData));
+        res.send('success');
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post('/marriage', (req, res) => {
+    try {
+        const data = req.body.data;
+        const readFile = fs.readFileSync(__dirname + '/marriage.json').toString();
+        const parseData = readFile.length > 1 ? JSON.parse(readFile) : [];
+        parseData.push(data);
+        fs.writeFileSync(__dirname + '/marriage.json', JSON.stringify(parseData));
+        res.send('success');
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post('/love', (req, res) => {
+    try {
+        const data = req.body.data;
+        const readFile = fs.readFileSync(__dirname + '/love.json').toString();
+        const parseData = readFile.length > 1 ? JSON.parse(readFile) : [];
+        parseData.push(data);
+        fs.writeFileSync(__dirname + '/love.json', JSON.stringify(parseData));
+        res.send('success');
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post('/hate', (req, res) => {
+    try {
+        const data = req.body.data;
+        const readFile = fs.readFileSync(__dirname + '/hate.json').toString();
+        const parseData = readFile.length > 1 ? JSON.parse(readFile) : [];
+        parseData.push(data);
+        fs.writeFileSync(__dirname + '/hate.json', JSON.stringify(parseData));
+        res.send('success');
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post('/season', (req, res) => {
+    try {
+        const data = req.body.data;
+        const readFile = fs.readFileSync(__dirname + '/season.json').toString();
+        const parseData = readFile.length > 1 ? JSON.parse(readFile) : [];
+        parseData.push(data);
+        fs.writeFileSync(__dirname + '/season.json', JSON.stringify(parseData));
+        res.send('success');
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post('/important', (req, res) => {
+    try {
+        const data = req.body.data;
+        const readFile = fs.readFileSync(__dirname + '/important.json').toString();
+        const parseData = readFile.length > 1 ? JSON.parse(readFile) : [];
+        parseData.push(data);
+        fs.writeFileSync(__dirname + '/important.json', JSON.stringify(parseData));
+        res.send('success');
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post('/friend', (req, res) => {
+    try {
+        const data = req.body.data;
+        const readFile = fs.readFileSync(__dirname + '/friend.json').toString();
+        const parseData = readFile.length > 1 ? JSON.parse(readFile) : [];
+        parseData.push(data);
+        fs.writeFileSync(__dirname + '/friend.json', JSON.stringify(parseData));
+        res.send('success');
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post('/color', (req, res) => {
+    try {
+        const data = req.body.data;
+        const readFile = fs.readFileSync(__dirname + '/color.json').toString();
+        const parseData = readFile.length > 1 ? JSON.parse(readFile) : [];
+        parseData.push(data);
+        fs.writeFileSync(__dirname + '/color.json', JSON.stringify(parseData));
+        res.send('success');
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post('/secret', (req, res) => {
+    try {
+        const data = req.body.data;
+        const readFile = fs.readFileSync(__dirname + '/secret.json').toString();
+        const parseData = readFile.length > 1 ? JSON.parse(readFile) : [];
+        parseData.push(data);
+        fs.writeFileSync(__dirname + '/secret.json', JSON.stringify(parseData));
+        res.send('success');
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post('/gender', (req, res) => {
+    try {
+        const data = req.body.data;
+        const readFile = fs.readFileSync(__dirname + '/gender.json').toString();
+        const parseData = readFile.length > 1 ? JSON.parse(readFile) : [];
+        parseData.push(data);
+        fs.writeFileSync(__dirname + '/gender.json', JSON.stringify(parseData));
+        res.send('success');
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post('/percent', (req, res) => {
+    try {
+        const data = req.body.data;
+        const readFile = fs.readFileSync(__dirname + '/percent.json').toString();
+        const parseData = readFile.length > 1 ? JSON.parse(readFile) : [];
+        parseData.push(data);
+        fs.writeFileSync(__dirname + '/percent.json', JSON.stringify(parseData));
+        res.send('success');
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post('/accuracy', (req, res) => {
+    try {
+        const data = req.body.data;
+        const readFile = fs.readFileSync(__dirname + '/accuracy.json').toString();
+        const parseData = readFile.length > 1 ? JSON.parse(readFile) : [];
+        parseData.push(data);
+        fs.writeFileSync(__dirname + '/accuracy.json', JSON.stringify(parseData));
         res.send('success');
     } catch (err) {
         console.log(err);
