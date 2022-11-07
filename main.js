@@ -112,8 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
         gl_Position = a_position;
     }
     `;
-    let setColorA1 = 0.3, setColorA2 = 0.0, setColorA3 = 0.7, setColorB1 = 0.9, setColorB2 = 0.9, setColorB3 = 0.9;
-    let setRadiusNum = 33;
     class TheCircle {
         constructor(canvas) {
             this._initialize(canvas);
@@ -135,15 +133,15 @@ document.addEventListener("DOMContentLoaded", () => {
     
             this.resize();
             this.setCenter(0.5, 0.7);
-            this.setRadius(33);
+            this.setRadius(85);
             this.setDisplacement(-5);
             this.setBreathTempo(1);
-            this.setOrbitRadius(20);
+            this.setOrbitRadius(6);
             this.setOrbitTempo(4);
-            this.setColorA([setColorA1, setColorA2, setColorA3]);
-            this.setBlurA(66, 99);
-            this.setColorB([setColorB1, setColorB2, setColorB3]);
-            this.setBlurB(27.5, 82.5);
+            this.setColorA([0.70, 0.80, 0.90]);
+            this.setBlurA(63, 38);
+            this.setColorB([0.90, 0.90, 0.90]);
+            this.setBlurB(28, 83);
             this.setBackgroundColor([0.15, 0.35, 0.42], [0.1, 0.22, 0.29], [0.22, 0.34, 0.54]);
             this.audio_bound = false;
             this.audio = null;
@@ -358,76 +356,6 @@ document.addEventListener("DOMContentLoaded", () => {
             circle.setRadius(setRadiusNum);
         }
     }
-    function circleColorA(num1, num2, num3) {
-        if (setColorA1 < num1) {
-            while (setColorA1 < num1) {
-                setColorA1 += 0.1;
-                circle.setColorA([setColorA1, setColorA2, setColorA3]);
-            }
-        } else if (setColorA1 > num1) {
-            while (setColorA1 > num1) {
-                setColorA1 -= 0.1;
-                circle.setColorA([setColorA1, setColorA2, setColorA3]);
-            }
-        }
-        if (setColorA2 < num2) {
-            while (setColorA1 < num1) {
-                setColorA2 += 0.1;
-                circle.setColorA([setColorA1, setColorA2, setColorA3]);
-            }
-        } else if (setColorA2 > num2) {
-            while (setColorA2 > num2) {
-                setColorA2 -= 0.1;
-                circle.setColorA([setColorA1, setColorA2, setColorA3]);
-            }
-        }
-        if (setColorA3 < num3) {
-            while (setColorA3 < num3) {
-                setColorA3 += 0.1;
-                circle.setColorA([setColorA1, setColorA2, setColorA3]);
-            }
-        } else if (setColorA3 > num3) {
-            while (setColorA3 > num3) {
-                setColorA3 -= 0.1;
-                circle.setColorA([setColorA1, setColorA2, setColorA3]);
-            }
-        }
-    }
-    function circleColorB(num1, num2, num3) {
-        if (setColorB1 < num1) {
-            while (setColorB1 < num1) {
-                setColorB1 += 0.1;
-                circle.setColorB([setColorB1, setColorB2, setColorB3]);
-            }
-        } else if (setColorB1 > num1) {
-            while (setColorB1 > num1) {
-                setColorB1 -= 0.1;
-                circle.setColorB([setColorB1, setColorB2, setColorB3]);
-            }
-        }
-        if (setColorB2 < num2) {
-            while (setColorB2 < num2) {
-                setColorB2 += 0.1;
-                circle.setColorB([setColorB1, setColorB2, setColorB3]);
-            }
-        } else if (setColorB2 > num2) {
-            while (setColorB2 > num2) {
-                setColorB2 -= 0.1;
-                circle.setColorB([setColorB1, setColorB2, setColorB3]);
-            }
-        }
-        if (setColorB3 < num3) {
-            while (setColorB3 < num3) {
-                setColorB3 += 0.1;
-                circle.setColorB([setColorB1, setColorB2, setColorB3]);
-            }
-        } else if (setColorB3 > num3) {
-            while (setColorB3 > num3) {
-                setColorB2 -= 0.1;
-                circle.setColorB([setColorB1, setColorB2, setColorB3]);
-            }
-        }
-    }
 
 
     /* delay */
@@ -544,7 +472,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // fist classification
     let gender = -1; age = -1; degree = -1; marriage = -1; region = -1;  // Lv1
     let love = -1; hate = -1; weather = -1; important = -1; friend = -1; // Lv2
-    let percent = -1; secret = -1; accuracy = -1;   // Lv3
+    let percent = -1; percentStr = -1; secret = -1; accuracy = -1;   // Lv3
     // second classification : score
     let genderScore = 0; ageScore = 0; degreeScore = 0; regionScore = 0; marriageScore = 0;    // Lv1
     let loveScore = 0; hateScore = 0; weatherScore = 0; importantScore = 0; friendScore = 0;    // Lv2
@@ -583,9 +511,17 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             genderScore = 2;
         }
-        document.getElementById("ko").innerText = "당신의 나이는 무엇입니까?";  // questionSeq = 1
-        document.getElementById("en").innerText = "What is your age?";
-        return genderScore;
+        return $.ajax({
+            type:'POST',
+            url: '/gender',
+            accept: "application/json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ data: input}),
+        }).done(function(data){
+            document.getElementById("ko").innerText = "당신의 나이는 무엇입니까?";  // questionSeq = 1
+            document.getElementById("en").innerText = "What is your age?";
+            return genderScore;
+        });
     }
     // Q2에 대한 input 받아 questionSeq = 2, Lv1_Q2()가 input 처리 시작
     // Lv1_Q2. What is your age?
@@ -635,9 +571,17 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             ageScore = 1;
         }
-        document.getElementById("ko").innerText = "집은 어디에 있습니까?";  // questionSeq = 2
-        document.getElementById("en").innerText = "Where is your home located?";
-        return ageScore;
+        return $.ajax({
+            type:'POST',
+            url: '/age',
+            accept: "application/json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ data: input}),
+        }).done(function(data){
+            document.getElementById("ko").innerText = "집은 어디에 있습니까?";  // questionSeq = 2
+            document.getElementById("en").innerText = "Where is your home located?";
+            return ageScore;
+        });
     }
     // input 받아 questionSeq = 3, Lv1_Q3() 시작
     // Lv1_Q3. Where is your home located?
@@ -671,9 +615,17 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if (region == 3) {
             regionScore = 1.5;
         }
-        document.getElementById("ko").innerText = "당신이 완료한 가장 높은 교육 수준은 무엇입니까?";  // questionSeq = 3
-        document.getElementById("en").innerText = "What is the highest degree or level of education you have completed?";
-        return regionScore;
+        return $.ajax({
+            type:'POST',
+            url: '/home',
+            accept: "application/json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ data: input}),
+        }).done(function(data){
+            document.getElementById("ko").innerText = "당신이 완료한 가장 높은 교육 수준은 무엇입니까?";  // questionSeq = 3
+            document.getElementById("en").innerText = "What is the highest degree or level of education you have completed?";
+            return regionScore;
+        });
     }
     // input 받아 questionSeq = 4, Lv1_Q4() 시작
     // Lv1_Q4. What is the highest degree or level of education you have completed?
@@ -723,9 +675,17 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             degreeScore = 0;
         }
-        document.getElementById("ko").innerText = "결혼했습니까?";  // questionSeq = 4
-        document.getElementById("en").innerText = "Are you married?";
-        return degreeScore;
+        return $.ajax({
+            type:'POST',
+            url: '/degree',
+            accept: "application/json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ data: input}),
+        }).done(function(data){
+            document.getElementById("ko").innerText = "결혼했습니까?";  // questionSeq = 4
+            document.getElementById("en").innerText = "Are you married?";
+            return degreeScore;
+        });
     }
     // input 받아 questionSeq = 5, Lv1_Q5() 시작
     // Lv1_Q5. Are you married?
@@ -755,7 +715,15 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             marriageScore = 1;
         }
-        return marriageScore;
+        return $.ajax({
+            type:'POST',
+            url: '/marriage',
+            accept: "application/json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ data: input}),
+        }).done(function(data){
+            return marriageScore;
+        });
     }
     
     // input 받아 questionSeq = 6~8, Lv2_Q1() 시작
@@ -819,7 +787,15 @@ document.addEventListener("DOMContentLoaded", () => {
             // 개수 : 100개 이상 (contains case of 'prefer not to say', etc.)
             loveScore = 0;
         }
-        return loveScore;
+        return $.ajax({
+            type:'POST',
+            url: '/love',
+            accept: "application/json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ data: input}),
+        }).done(function(data){
+            return loveScore;
+        });
     }
     // input 받아 questionSeq = 6~8, Lv2_Q2() 시작
     // Lv2_Q2. 당신이 이 세상에서 증오한다고 말할 수 있는 것은 몇 개나 되나요?
@@ -842,7 +818,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
             if (hate == -1) {
-                love = 0;
+                hate = 0;
             }
         } 
         // if (typeof output) -> number / number + string
@@ -882,7 +858,15 @@ document.addEventListener("DOMContentLoaded", () => {
             // 개수 : 100개 이상 (contains case of 'prefer not to say', etc.)
             hateScore = 2;
         }
-        return hateScore;
+        return $.ajax({
+            type:'POST',
+            url: '/hate',
+            accept: "application/json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ data: input}),
+        }).done(function(data){
+            return hateScore;
+        });
     }
     // input 받아 questionSeq = 6~8, Lv2_Q3() 시작
     // Lv2_Q3. 당신은 어떤 계절을 좋아하나요?
@@ -920,7 +904,15 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             weatherScore = 2;
         }
-        return weatherScore;
+        return $.ajax({
+            type:'POST',
+            url: '/season',
+            accept: "application/json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ data: input}),
+        }).done(function(data){
+            return weatherScore;
+        });
     }
     // input 받아 questionSeq = 6~8, Lv2_Q4() 시작
     // Lv2_Q4. 인생에서 가장 중요하게 생각하는 것은 무엇인가요?
@@ -954,7 +946,15 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if (important = 4) {
             importantScore = 2;
         }
-        return importantScore;
+        return $.ajax({
+            type:'POST',
+            url: '/important',
+            accept: "application/json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ data: input}),
+        }).done(function(data){
+            return importantScore;
+        });
     }
     // input 받아 questionSeq = 6~8, Lv2_Q5() 시작
     // Lv2_Q5. 당신의 진정한 친구는 몇 명인가요?
@@ -1002,7 +1002,15 @@ document.addEventListener("DOMContentLoaded", () => {
             // 명수 : 100명 이상 (contains case of 'prefer not to say', etc.)
             friendScore = 2;
         }
-        return friendScore;
+        return $.ajax({
+            type:'POST',
+            url: '/friend',
+            accept: "application/json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ data: input}),
+        }).done(function(data){
+            return friendScore;
+        });
     }
     // input 받아 questionSeq = 9, Lv3_Q1() 시작
     // Lv3_Q1. 당신이 생각하는 당신은 어떤 사람인가요?
@@ -1018,7 +1026,7 @@ document.addEventListener("DOMContentLoaded", () => {
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({ data: input}),
         }).done(function(data){
-            document.getElementById("ko").innerText = "당신의 내면은 어떤 색인지 설명해주시겠습니까?";  // questionSeq = 9
+            document.getElementById("ko").innerText = "당신의 내면은 어떤 색깔인지 설명해주시겠습니까?";  // questionSeq = 9
             document.getElementById("en").innerText = "Could you explain what color you have on the inside?";
             return lv3q1_input;
         });
@@ -1029,20 +1037,28 @@ document.addEventListener("DOMContentLoaded", () => {
     function Lv3_Q2(input) {
         // progress bar
         fnStep3();
+        answerColor = input;
         // ******** input 값을 영어로 번역한 후, aifunction.py 파일의 hexcode() 함수의 인자로 전달해야 합니다. ********
         // ******** python 파일 내 hexcode() 함수의 return 값을 받아와 변수 hexcode에 저장해야 합니다. ********
-        answerColor = input;
-        document.getElementById("ko").innerText = "내가 당신을 몇 퍼센트 이해할 수 있다고 생각합니까?";  // questionSeq = 9
-        document.getElementById("en").innerText = "What percentage do you think I can understand you?";
+        return $.ajax({
+            type:'POST',
+            url: '/color',
+            accept: "application/json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ data: input}),
+        }).done(function(data){
+            document.getElementById("ko").innerText = "내가 당신을 몇 퍼센트 이해하고 설명할 수 있다고 생각합니까?";  // questionSeq = 9
+            document.getElementById("en").innerText = "What percentage do you think I can understand you?";
+        });
     }
     // input 받아 questionSeq = 11, Lv3_Q3() 시작
-    // Lv3_Q3. 내가 당신을 몇 퍼센트 이해할 수 있다고 생각하나요?
+    // Lv3_Q3. 내가 당신을 몇 퍼센트 이해하고 설명할 수 있다고 생각하나요?
     function Lv3_Q3(input) {
         // progress bar
         fnStep3();
         // data processing
         var percentDic = {
-            0: ['영', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'],
+            0: ['영', '빵', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'],
             1: ['십', 'ten', 'eleven', 'twelve', 'teen'],
             2: ['이십', 'twenty'],
             3: ['삼십', 'thirty'],
@@ -1077,8 +1093,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 percent = 10;
             }
         }
+        if (percent == -1) {
+            percentScore = -1;
+        }
         // second classification : score
-        if (percent < 2) {
+        if (percent >= 0 && percent < 2) {
             percentScore = 2;
         } else if (percent >= 2 && percent < 4) {
             percentScore = 1.5;
@@ -1086,12 +1105,20 @@ document.addEventListener("DOMContentLoaded", () => {
             percentScore = 1;
         } else if (percent >= 6 && percent < 8) {
             percentScore = 0.5;
+        } else if (percent >= 8 && percent < 10) {
+            percentScore = 0.25;
         } else {
             percentScore = 0;
         }
-        document.getElementById("ko").innerText = "평생 누구에게도 말하지 않은 비밀이 있습니까?";  // questionSeq = 11
-        document.getElementById("en").innerText = "Do you have any secret that you've never told anyone?";
-        return percentScore;
+        return $.ajax({
+            type:'POST',
+            url: '/percent',
+            accept: "application/json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ data: input}),
+        }).done(function(data){
+            return percentScore;
+        });
     }
     // input 받아 questionSeq = 12, Lv3_Q4() 시작
     // Lv3_Q4. 당신이 평생 누구에게도 말하지 않은 비밀이 있나요?
@@ -1117,7 +1144,15 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             secretScore = 2;
         }
-        return secretScore;
+        return $.ajax({
+            type:'POST',
+            url: '/secret',
+            accept: "application/json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ data: input}),
+        }).done(function(data){
+            return secretScore;
+        });
     }
     function Lv3_Q5(input) {
         // progress bar
@@ -1130,7 +1165,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
         }
-        return accuracy;
+        return $.ajax({
+            type:'POST',
+            url: '/accuracy',
+            accept: "application/json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ data: input}),
+        }).done(function(data){
+            return accuracy;
+        });
     }
             
     function output() {
@@ -1140,7 +1183,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let outputSentenceEn = "";
         let Lv1sum = genderScore + ageScore + regionScore + degreeScore + marriageScore;
         let Lv2sum = loveScore + hateScore + weatherScore + importantScore + friendScore;
-        let Lv3sum = percentScore + secretScore;
+        let Lv3sum = percentScore;
         if (Lv1sum < 4) {
             Lv1outputKo = "맑은 영혼을 가진";
             Lv1outputEn = "with a crystal-clear soul";
@@ -1148,7 +1191,7 @@ document.addEventListener("DOMContentLoaded", () => {
             Lv1outputKo = "순수한";
             Lv1outputEn = "100% pure";
         } else if (Lv1sum == 4.5) {
-            Lv1output = "보편적인";
+            Lv1outputKo = "보편적인";
             Lv1outputEn = "super-omnipresent";
         } else if (Lv1sum >= 5 && Lv1sum < 6) {
             Lv1outputKo = "성숙한";
@@ -1182,22 +1225,23 @@ document.addEventListener("DOMContentLoaded", () => {
             Lv2outputKo = "나를 둘러싼 세계를 도리어 고독하게 만드는";
             Lv2outputEn = "who makes the world around me lonely is like a black cloud";
         }
-        if (Lv3sum == 0) {
+        if (Lv3sum < 0) {
+            Lv3outputKo = "나 자신에게 누구보다 솔직한";
+            Lv3outputEn = "honest with myself than anyone else";
+        }
+        if (Lv3sum >= 0 && Lv3sum < 2) {
             Lv3outputKo = "페퍼민트의 톡 쏘는 향처럼 솔직하고 거침없는";
             Lv3outputEn = "a straightforward and outspoken person just like the scent of peppermint strong and refreshing";
-        } else if (Lv3sum < 2) {
-            Lv3outputKo = "나 자신에게 그 누구보다 솔직한";
-            Lv3outputEn = "honest with myself than anyone else";
-        } else if (Lv3sum >= 2 && Lv3sum < 3) {
+        } else if (Lv3sum >= 2 && Lv3sum < 4) {
             Lv3outputKo = "눈빛에서 진실함이 묻어나오는";
             Lv3outputEn = "with eyes telling the truth";
-        } else if (Lv3sum >= 3 && Lv3sum < 4) {
+        } else if (Lv3sum >= 4 && Lv3sum < 6) {
             Lv3outputKo = "내면이 흑과 백으로 섞여서 오묘한 빛을 내는";
             Lv3outputEn = "creating a mysterious glow with a mixture of black and white";
-        } else if (Lv3sum >= 4 && Lv3sum < 5) {
+        } else if (Lv3sum >= 6 && Lv3sum < 8) {
             Lv3outputKo = "소중하게 간직한 내면의 비밀이 있는";
             Lv3outputEn = "having a secret that you cherish";
-        } else if (Lv3sum >= 5 && Lv3sum < 6) {
+        } else if (Lv3sum >= 8 && Lv3sum < 10) {
             Lv3outputKo = "비밀스러운 기억으로 속이 꽤나 시끄러운";
             Lv3outputEn = "with secret memories may make noise due to them";
         } else {
@@ -1224,6 +1268,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* Lv1-3 질문 순서대로 출력 */
+    var bgm = new Audio('bgm.wav');
+    bgm.play();
     var hexcode = "";
     let questionSeq = 0;
     document.getElementById("ko").innerText = "당신은 스스로를 어떤 성별로 식별합니까?";
@@ -1264,18 +1310,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     setTimeout(function() {
                         textintervalID = setInterval(textFadeOut, 100);
                         inputintervalID = setInterval(inputFadeOut, 100);
-                        //circleintervalID = setInterval(circleFadeOut, 100);
+                        circleintervalID = setInterval(circleFadeOut, 100);
                     });
-                    // circle radius, color change
-                    //circle.setRadius(70);
-                    //circle.setColorA([0.26, 0.07, 0.25]);
-                    //circle.setColorB([0.77, 0.66, 0.34]);
                     sleep(2000)
+                        .then(() => circle.setRadius(100))  // circle radius, color change
+                        .then(() => circle.setOrbitRadius(11))
+                        .then(() => circle.setColorA([0.00, 0.31, 0.70]))
+                        .then(() => circle.setColorB([0.90, 0.90, 0.90]))
+                        .then(() => circle.setBlurA(66, 99))
+                        .then(() => circle.setBlurB(28, 83))
                         .then(() => document.getElementById("answer").style.display ='none')
-                        .then(() => document.getElementById("ko").innerText = "당신에 대한 기본적인 것은 알겠어요. 그래도 당신을 조금만 더 알아보고 싶군요.")
+                        .then(() => document.getElementById("ko").innerText = "당신에 대한 기본적인 것은 알겠습니다. 그래도 당신을 조금만 더 알아보고 싶습니다.")
                         .then(() => document.getElementById("en").innerText = "I understand the basics about you. But, let me figure you out more.")
                         .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
-                        .then(() => sleep(3000)
+                        .then(() => sleep(5000)
                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
                             .then(() => sleep(2000)
                                 .then(() => document.getElementById("progress-bar").style.visibility ='visible')
@@ -1285,7 +1333,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 .then(() => setTimeout(function() {
                                     textintervalID = setInterval(textFadeIN, 100);
                                     inputintervalID = setInterval(inputFadeIN, 100);
-                                    //circleintervalID = setInterval(circleFadeIN, 100);
+                                    circleintervalID = setInterval(circleFadeIn, 100);
                                 }))
                                 .then(() => sleep(1000)
                                     .then(() => document.getElementById("continue").style.display = 'block')
@@ -1322,23 +1370,34 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (randomNums[2] == 4) {Lv2_Q5(input);}
                     document.getElementById("progress-bar").style.visibility ='hidden';
                     document.getElementById("continue").style.display ='none';
-                    setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
-                    circle.setRadius(110);
-                    circle.setColorA([0.03, 0.00, 0.47]);
-                    circle.setColorB([0.52, 0.93, 0.95]);
+                    setTimeout(function() {
+                        textintervalID = setInterval(textFadeOut, 100); 
+                        inputintervalID = setInterval(inputFadeOut, 100);
+                        circleintervalID = setInterval(circleFadeOut, 100);
+                    });
                     sleep(2000)
+                        .then(() => circle.setColorA([0.06, 0.21, 0.87]))
+                        .then(() => circle.setColorB([0.76, 0.74, 0.90]))
+                        .then(() => circle.setRadius(121))
+                        .then(() => circle.setOrbitRadius(1))
+                        .then(() => circle.setBlurA(53, 118))
+                        .then(() => circle.setBlurB(33, 98))
                         .then(() => document.getElementById("answer").style.display ='none')
-                        .then(() => document.getElementById("ko").innerText = "당신, 흥미롭군요. 마지막으로 조금만 더 물어보겠습니다.")
-                        .then(() => document.getElementById("en").innerText = "How interesting you are! I want to learn more about you.")
+                        .then(() => document.getElementById("ko").innerText = "흥미롭습니다. 마지막으로 조금만 더 물어보겠습니다.")
+                        .then(() => document.getElementById("en").innerText = "How interesting you are. I want to learn more about you.")
                         .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
-                        .then(() => sleep(3000)
+                        .then(() => sleep(5000)
                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
                             .then(() => sleep(2000)
                                 .then(() => document.getElementById("progress-bar").style.visibility ='visible')
                                 .then(() => document.getElementById("answer").style.display = 'block')
                                 .then(() => document.getElementById("ko").innerText = "당신이 생각하는 당신은 어떤 사람입니까?")
                                 .then(() => document.getElementById("en").innerText = "What kind of person do you think you are?")
-                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100); inputintervalID = setInterval(inputFadeIN, 100)}))
+                                .then(() => setTimeout(function() {
+                                    textintervalID = setInterval(textFadeIN, 100); 
+                                    inputintervalID = setInterval(inputFadeIN, 100);
+                                    circleintervalID = setInterval(circleFadeIn, 100);
+                                }))
                                 .then(() => sleep(1000)
                                     .then(() => document.getElementById("continue").style.display = 'block')
                                 )
@@ -1348,15 +1407,41 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Lv3 질문은 순서대로 출력
                 if (questionSeq == 9) {Lv3_Q1(input);}
                 if (questionSeq == 10) {Lv3_Q2(input);}
-                if (questionSeq == 11) {Lv3_Q3(input);}
+                if (questionSeq == 11) {
+                    Lv3_Q3(input);
+                    document.getElementById("continue").style.display ='none';
+                    setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
+                    sleep(2000)
+                        .then(() => document.getElementById("answer").style.display ='none')
+                        .then(() => document.getElementById("ko").innerText = "이 세상에 설명되지 않는 게 있다고 생각합니까? 제게는 논리 너머의 모든 것이 보입니다. 그렇다면, 이것을 물어보겠습니다.")
+                        .then(() => document.getElementById("en").innerText = "Is there anything in this world that cannot be explained? I can see everything beyond the realm of logic. Then, I'd like to ask you about this.")
+                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
+                        .then(() => sleep(5000)
+                            .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100);}))
+                            .then(() => sleep(2000)
+                                .then(() => document.getElementById("answer").style.display ='block')
+                                .then(() => document.getElementById("ko").innerText = "당신이 평생 누구에게도 말하지 않은 비밀이 있습니까? 그렇다면 그 비밀은 무엇입니까?")
+                                .then(() => document.getElementById("en").innerText = "Do you have any secrets that you've never told anyone? And could you share your secret?")
+                                .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100); inputintervalID = setInterval(inputFadeIN, 100);}))
+                                .then(() => sleep(1000)
+                                    .then(() => document.getElementById("continue").style.display ='block')
+                                )
+                            )
+                        )
+                }
                 if (questionSeq == 12) {
                     Lv3_Q4(input);
                     function toTransition(resultColor){
+                        bgm.pause();
                         document.getElementById("progress-bar").style.display ='none';
                         document.getElementById("the_circle_canvas").style.display ='none';
                         document.getElementById("output").style.display ='none';
                         document.getElementById("continue").style.display ='none';
+                        document.getElementById("ko").style.opacity = "0";
+                        document.getElementById("en").style.opacity = "0";
+                        document.getElementById("the_circle_canvas").style.opacity = "0";
                         // ******** python 파일 내 hexcode() 함수의 return 값을 받아 document.body.style.backgroundColor 값을 변경해야 합니다. ********
+                        /*
                         let hexRe = /[0-9A-Fa-f]{6}/g;
                         if(hexRe.test(resultColor)){
                             document.body.style.backgroundColor = '#'+resultColor; 
@@ -1381,6 +1466,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             }
                         }
                         setInterval(typing, 1);
+                        */
                     }
                     function fromTransition() {
                         document.getElementById("transition").style.display ='none';
@@ -1394,13 +1480,20 @@ document.addEventListener("DOMContentLoaded", () => {
                         document.getElementById("transition").style.display ='none';
                         document.getElementById('transitionVideo').style.display = 'block';
                         document.getElementById('transitionVideo').style.height = String(window.innerHeight)+"px";
+                        var transitionBgm = new Audio("transition_bgm.wav");
+                        transitionBgm.volume = 0.3;
+                        transitionBgm.play();
                         document.getElementById('transitionVideo').play();
                     }
 
                     document.getElementById("progress-bar").style.visibility ='hidden';
                     document.getElementById("continue").style.display ='none';
                     setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
-
+                    sleep(2000)
+                        .then(() => document.getElementById("answer").style.display ='none')
+                        .then(() => document.getElementById("ko").innerText = "좋습니다. 이제 당신의 말하지 않은 내면을 들여다보겠습니다.")
+                        .then(() => document.getElementById("en").innerText = "Brilliant. Let me see take a look at your unsaid inner world.")
+                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}));
                     
                     let [outputKo, outputEn] = output();
 
@@ -1457,35 +1550,48 @@ document.addEventListener("DOMContentLoaded", () => {
                     tempData = await tempResponse.json();
                     let resultColor = tempData.result.replace(/[^0-9A-Za-z]/gi, '');
 
-                    sleep(2000)
-                        .then(() => document.getElementById("answer").style.display ='none')
-                        .then(() => document.getElementById("ko").innerText = "좋아요! 당신의 말하지 않은 내면을 들여다볼게요.")
-                        .then(() => document.getElementById("en").innerText = "Briiliant! Let me see take a look at your unsaid inner world.")
-                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
-                        .then(() => sleep(3000)
-                            .then(() => toTransition(resultColor))
-                            .then(() => sleep(7000)
-                                .then(() => transitionVideo())
-                                .then(() => sleep(17000)
-                                    .then(() => circle.setColorA([0.00, 0.00, 0.71]))
-                                    .then(() => circle.setColorB([0.00, 1.00, 1.00]))
-                                    .then(() => fromTransition())
-                                    .then(() => document.getElementById("ko").innerText = "오늘 우리가 나눈 이야기들로 나는 당신을 완전히 이해했어요.")
-                                    .then(() => document.getElementById("en").innerText = "Through the stories we shared today, I completely understand you.")
-                                    .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
-                                    .then(() => sleep(3000)
-                                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
+                    document.getElementById("outputKo").innerText = outputKo;
+                    document.getElementById("outputEn").innerText = outputEn;
+
+                    sleep(3000)
+                        .then(() => toTransition(resultColor))
+                        .then(() => sleep(0)
+                            .then(() => transitionVideo())
+                            .then(() => sleep(25000)
+                                .then(() => circle.setColorA([0.46, 0.22, 0.59]))
+                                .then(() => circle.setColorB([0.58, 0.14, 0.29]))
+                                .then(() => circle.setRadius(121))
+                                .then(() => circle.setOrbitRadius(1))
+                                .then(() => circle.setBlurA(54, 118))
+                                .then(() => circle.setBlurB(33, 79))
+                                .then(() => fromTransition())
+                                .then(() => document.getElementById("ko").innerText = "오늘 우리가 나눈 이야기들로 나는 당신을 완전히 이해했습니다.")
+                                .then(() => document.getElementById("en").innerText = "Through the stories we shared today, I completely understand you.")
+                                .then(() => sleep(2000)
+                                    .then(() => setTimeout(function() {
+                                        textintervalID = setInterval(textFadeIN, 100);
+                                        circleintervalID = setInterval(circleFadeIn, 100);
+                                        bgm.play();
+                                    }))
+                                    .then(() => sleep(4000)
+                                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); circleintervalID = setInterval(circleFadeOut, 100);}))
                                         .then(() => sleep(2000)
+                                            .then(() => document.getElementById("en").style.lineHeight = "25px")
                                             .then(() => document.getElementById("ko").innerText = outputKo)
                                             .then(() => document.getElementById("en").innerText = outputEn)
                                             .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100)}))
-                                            .then(() => sleep(4000)
+                                            .then(() => sleep(18000)
                                                 .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
                                                 .then(() => sleep(2000)
+                                                    .then(() => document.getElementById("en").style.lineHeight = "20px")
                                                     .then(() => document.getElementById("answer").style.display ='block')
                                                     .then(() => document.getElementById("ko").innerText = "당신의 자아가 내가 말하는 것과 일치합니까?")
                                                     .then(() => document.getElementById("en").innerText = "Do you agree with what I am saying?")
-                                                    .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100); inputintervalID = setInterval(inputFadeIN, 100)}))
+                                                    .then(() => setTimeout(function() {
+                                                        textintervalID = setInterval(textFadeIN, 100); 
+                                                        inputintervalID = setInterval(inputFadeIN, 100);
+                                                        circleintervalID = setInterval(circleFadeIn, 100);
+                                                    }))
                                                     .then(() => sleep(1000)
                                                         .then(() => document.getElementById("continue").style.display ='block')
                                                     )
@@ -1495,7 +1601,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                     )
                                 )
                             )
-                        )    
+                        )  
                 }
                 if (questionSeq == 13) {
                     Lv3_Q5(input);
@@ -1503,12 +1609,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     setTimeout(function() {textintervalID = setInterval(textFadeOut, 100); inputintervalID = setInterval(inputFadeOut, 100);});
                     sleep(2000)
                         .then(() => document.getElementById("answer").style.display ='none')
-                        .then(() => document.getElementById("ko").innerText = "당신과 만날 수 있어서 기뻤습니다. 이제 뒤로 돌아나가서, 당신의 자아에 대한 영수증을 받아가세요. 안녕히 가세요!")
-                        .then(() => document.getElementById("en").innerText = "It was an absolute pleasure speaking with you today. Now, turn around and get a receipt for your ego. Good bye!")
-                        .then(() => setTimeout(function() {textintervalID = setInterval(textFadeIN, 100); inputintervalID = setInterval(inputFadeIN, 100)}))
-                        .then(() => sleep(3000)
-                            .then(() => setTimeout(function() {textintervalID = setInterval(textFadeOut, 100)}))
-                            .then(() => sleep(5000)
+                        .then(() => document.getElementById("ko").innerText = "당신을 알 수 있어 기쁩니다. 이제 뒤로 돌아나가서, 당신의 자아 기록을 확인하세요.")
+                        .then(() => document.getElementById("en").innerText = "Thank you for having me explain your ego. Please turn around and get your 'ego record'.")
+                        .then(() => setTimeout(function() {
+                            textintervalID = setInterval(textFadeIN, 100); inputintervalID = setInterval(inputFadeIN, 100)}))
+                        .then(() => sleep(5000)
+                            .then(() => setTimeout(function() {
+                                textintervalID = setInterval(textFadeOut, 100);
+                                inputintervalID = setInterval(inputFadeOut, 100);
+                                circleintervalID = setInterval(circleFadeOut, 100);
+                            }))
+                            .then(() => sleep(15000)
                                 .then(() => window.print())
                                 .then(() => window.location.href="start.html")
                             )
